@@ -1,0 +1,12 @@
+The efficient and sustainable management of Swiss municipalities' waste collection processes is a non-trivial task, but well-designed decision support systems (DSS) can help by providing valuable information to the civil servants in charge. Unfortunately, the uptake of DSS in various industries and countries has been limited [insert source!!!]. Interest in the study of design and development of decision support applications therefore exists in academic environments. This thesis' aim is to contribute to the existing academic literature on the topic of design and development of decision support applications.
+
+The development of such DSS can be divided in two parts. First, one or several models need to be developed that can be fed with different input data from different Swiss municipalities (such as e.g. street maps, housing units, garbage estimations for each housing unit, available vehicle types for the waste collection etc.) and then output results data (such as e.g. optimal routes for the waste collection vehicles or optimal placing of waste collection facilities). In a second step, a decision support application has to be built that allows the civil servants to view input and output data and to interact with those decision support models.
+
+This thesis documents the design and development of a decision support application that allows users to interact with the decision support models for waste collection optimization developed by Bürgy et al. 20xx.
+
+In order to interact with the decision support models for waste collection optimization a server and a client-side application was developed using modern web technologies. The server-side application provides an interface (in the form of a REST API) for the client-side application to interact with the waste collection optimization models and the database. The client-side application, on the other hand, requests, modifies and displays the waste collection data to the users.
+
+DSS (general) -> Waste Collection -> Application
+
+Conclusion:
+The uptake of the developed DSS may be analysed in future research...

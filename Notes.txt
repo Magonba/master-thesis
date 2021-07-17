@@ -1,0 +1,26 @@
+table of contents:
+ 1. Introduction
+ 2. Literature Review
+ 3. Technologies
+    3.1. PostgreSQL
+    3.2. Node and NPM
+    3.3. TypeScript
+    3.4. Jest
+    3.5. VueJS
+ 4. Software Development Process
+    4.1. Requirements Engineering
+    4.2. Prototype
+    4.3. Database
+    4.4. Backend
+        4.4.1. Development
+        4.4.2. Testing
+    4.5. Frontend
+        4.5.1. Development
+        4.5.2. Testing
+ 5. Short Manual
+ 6. Conclusion
+
+Notes 02.07.2021:
+    Plan:
+    -Correct Prototype (done)
+    -Create Diagrams (try to finish, alternatively shorten time to write Technology part)

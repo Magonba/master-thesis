@@ -1,0 +1,27 @@
+4. Software Development Process
+    4.1. Requirements Engineering (and Prototype)
+    4.2. Database
+    4.3. Backend
+        4.3.1. Development
+        4.3.2. Testing
+    4.4. Frontend
+        4.4.1. Development
+        4.4.2. Testing
+
+Diagrams:
+-Use Case Diagram (RE)
+-Not a diagram, but: include Screenshots of the Prototype
+-Make database diagram (use the tool that was once used)
+-Class Diagram (Backend Development)
+-BPMN Diagram(s):
+    -Create Project
+    -Create Garbage Scenario
+    -Create Collection Point Scenario
+    -Create Vehicle Type(s)
+    -Create/Calculate Result(s)
+    -Compare Results
+    -Choose best Solution
+
+
+4. Software Development Process
+    Motivate Steps (short) and explain (short) was done in each step

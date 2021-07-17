@@ -1,0 +1,317 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<database name="wastecollectiondata" schema="fribourg" type="PostgreSQL - 12.6 (Ubuntu 12.6-0ubuntu0.20.04.1)">
+   <tables>
+      <table name="arcs" numRows="4" remarks="" schema="fribourg" type="TABLE">
+         <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="sourcenodeid" nullable="false" remarks="" size="10" type="int4" typeCode="4">
+            <child column="sourcenodeid" foreignKey="fk_arc" implied="false" onDeleteCascade="true" schema="fribourg" table="vehicletypeversions_nodes_activatedarcs"/>
+            <parent column="nodeid" foreignKey="fk_sourcenode" implied="false" onDeleteCascade="true" schema="fribourg" table="nodes"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="destinationnodeid" nullable="false" remarks="" size="10" type="int4" typeCode="4">
+            <child column="destinationnodeid" foreignKey="fk_arc" implied="false" onDeleteCascade="true" schema="fribourg" table="vehicletypeversions_nodes_activatedarcs"/>
+            <parent column="nodeid" foreignKey="fk_destinationnode" implied="false" onDeleteCascade="true" schema="fribourg" table="nodes"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="distance" nullable="false" remarks="" size="10" type="int4" typeCode="4"/>
+         <primaryKey column="sourcenodeid" sequenceNumberInPK="1"/>
+         <primaryKey column="destinationnodeid" sequenceNumberInPK="2"/>
+         <index name="arcs_pkey" unique="true">
+            <column ascending="true" name="sourcenodeid"/>
+            <column ascending="true" name="destinationnodeid"/>
+         </index>
+      </table>
+      <table name="collectionpointscenarios" numRows="2" remarks="" schema="fribourg" type="TABLE">
+         <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="title" nullable="false" remarks="" size="255" type="varchar" typeCode="12">
+            <child column="title" foreignKey="fk_collectionpointscenario" implied="false" onDeleteCascade="true" schema="fribourg" table="collectionpointscenarioversions"/>
+         </column>
+         <primaryKey column="title" sequenceNumberInPK="1"/>
+         <index name="collectionpointscenarios_pkey" unique="true">
+            <column ascending="true" name="title"/>
+         </index>
+      </table>
+      <table name="collectionpointscenarioversions" numRows="4" remarks="" schema="fribourg" type="TABLE">
+         <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="title" nullable="false" remarks="" size="255" type="varchar" typeCode="12">
+            <child column="title" foreignKey="fk_collectionpointscenario" implied="false" onDeleteCascade="true" schema="fribourg" table="collectionpointscenarioversions_nodes_potcp"/>
+            <child column="titlecpsc" foreignKey="fk_collectionpointscenario" implied="false" onDeleteCascade="true" schema="fribourg" table="results"/>
+            <parent column="title" foreignKey="fk_collectionpointscenario" implied="false" onDeleteCascade="true" schema="fribourg" table="collectionpointscenarios"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="1" name="timing" nullable="false" remarks="" size="29" type="timestamp" typeCode="93">
+            <child column="timing" foreignKey="fk_collectionpointscenario" implied="false" onDeleteCascade="true" schema="fribourg" table="collectionpointscenarioversions_nodes_potcp"/>
+            <child column="timingcpsc" foreignKey="fk_collectionpointscenario" implied="false" onDeleteCascade="true" schema="fribourg" table="results"/>
+         </column>
+         <primaryKey column="title" sequenceNumberInPK="1"/>
+         <primaryKey column="timing" sequenceNumberInPK="2"/>
+         <index name="collectionpointscenarioversions_pkey" unique="true">
+            <column ascending="true" name="title"/>
+            <column ascending="true" name="timing"/>
+         </index>
+      </table>
+      <table name="collectionpointscenarioversions_nodes_potcp" numRows="16" remarks="" schema="fribourg" type="TABLE">
+         <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="nodeid" nullable="false" remarks="" size="10" type="int4" typeCode="4">
+            <parent column="nodeid" foreignKey="fk_node" implied="false" onDeleteCascade="true" schema="fribourg" table="nodes"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="title" nullable="false" remarks="" size="255" type="varchar" typeCode="12">
+            <parent column="title" foreignKey="fk_collectionpointscenario" implied="false" onDeleteCascade="true" schema="fribourg" table="collectionpointscenarioversions"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="2" name="timing" nullable="false" remarks="" size="29" type="timestamp" typeCode="93">
+            <parent column="timing" foreignKey="fk_collectionpointscenario" implied="false" onDeleteCascade="true" schema="fribourg" table="collectionpointscenarioversions"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="potentialcollectionpoint" nullable="false" remarks="" size="1" type="bool" typeCode="-7"/>
+         <primaryKey column="nodeid" sequenceNumberInPK="1"/>
+         <primaryKey column="title" sequenceNumberInPK="2"/>
+         <primaryKey column="timing" sequenceNumberInPK="3"/>
+         <index name="collectionpointscenarioversions_nodes_potcp_pkey" unique="true">
+            <column ascending="true" name="nodeid"/>
+            <column ascending="true" name="title"/>
+            <column ascending="true" name="timing"/>
+         </index>
+      </table>
+      <table name="facilities" numRows="3" remarks="" schema="fribourg" type="TABLE">
+         <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="nodeid" nullable="false" remarks="" size="10" type="int4" typeCode="4">
+            <parent column="nodeid" foreignKey="fk_node" implied="false" onDeleteCascade="true" schema="fribourg" table="nodes"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="1" name="timingresult" nullable="false" remarks="" size="29" type="timestamp" typeCode="93">
+            <parent column="timing" foreignKey="fk_result" implied="false" onDeleteCascade="true" schema="fribourg" table="results"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="wasteestimation" nullable="false" remarks="" size="10" type="int4" typeCode="4"/>
+         <primaryKey column="nodeid" sequenceNumberInPK="1"/>
+         <primaryKey column="timingresult" sequenceNumberInPK="2"/>
+         <index name="facilities_pkey" unique="true">
+            <column ascending="true" name="nodeid"/>
+            <column ascending="true" name="timingresult"/>
+         </index>
+      </table>
+      <table name="garbagescenarios" numRows="2" remarks="" schema="fribourg" type="TABLE">
+         <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="title" nullable="false" remarks="" size="255" type="varchar" typeCode="12">
+            <child column="title" foreignKey="fk_garbagescenario" implied="false" onDeleteCascade="true" schema="fribourg" table="garbagescenarioversions"/>
+         </column>
+         <primaryKey column="title" sequenceNumberInPK="1"/>
+         <index name="garbagescenarios_pkey" unique="true">
+            <column ascending="true" name="title"/>
+         </index>
+      </table>
+      <table name="garbagescenarioversions" numRows="4" remarks="" schema="fribourg" type="TABLE">
+         <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="title" nullable="false" remarks="" size="255" type="varchar" typeCode="12">
+            <child column="title" foreignKey="fk_garbagescenario" implied="false" onDeleteCascade="true" schema="fribourg" table="garbagescenarioversions_nodes_waste"/>
+            <child column="titlegarbsc" foreignKey="fk_garbagescenario" implied="false" onDeleteCascade="true" schema="fribourg" table="results"/>
+            <parent column="title" foreignKey="fk_garbagescenario" implied="false" onDeleteCascade="true" schema="fribourg" table="garbagescenarios"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="1" name="timing" nullable="false" remarks="" size="29" type="timestamp" typeCode="93">
+            <child column="timing" foreignKey="fk_garbagescenario" implied="false" onDeleteCascade="true" schema="fribourg" table="garbagescenarioversions_nodes_waste"/>
+            <child column="timinggarbsc" foreignKey="fk_garbagescenario" implied="false" onDeleteCascade="true" schema="fribourg" table="results"/>
+         </column>
+         <primaryKey column="title" sequenceNumberInPK="1"/>
+         <primaryKey column="timing" sequenceNumberInPK="2"/>
+         <index name="garbagescenarioversions_pkey" unique="true">
+            <column ascending="true" name="title"/>
+            <column ascending="true" name="timing"/>
+         </index>
+      </table>
+      <table name="garbagescenarioversions_nodes_waste" numRows="16" remarks="" schema="fribourg" type="TABLE">
+         <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="nodeid" nullable="false" remarks="" size="10" type="int4" typeCode="4">
+            <parent column="nodeid" foreignKey="fk_node" implied="false" onDeleteCascade="true" schema="fribourg" table="nodes"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="title" nullable="false" remarks="" size="255" type="varchar" typeCode="12">
+            <parent column="title" foreignKey="fk_garbagescenario" implied="false" onDeleteCascade="true" schema="fribourg" table="garbagescenarioversions"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="2" name="timing" nullable="false" remarks="" size="29" type="timestamp" typeCode="93">
+            <parent column="timing" foreignKey="fk_garbagescenario" implied="false" onDeleteCascade="true" schema="fribourg" table="garbagescenarioversions"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="17" id="3" name="wasteamount" nullable="false" remarks="" size="17" type="float8" typeCode="8"/>
+         <primaryKey column="nodeid" sequenceNumberInPK="1"/>
+         <primaryKey column="title" sequenceNumberInPK="2"/>
+         <primaryKey column="timing" sequenceNumberInPK="3"/>
+         <index name="garbagescenarioversions_nodes_waste_pkey" unique="true">
+            <column ascending="true" name="nodeid"/>
+            <column ascending="true" name="title"/>
+            <column ascending="true" name="timing"/>
+         </index>
+      </table>
+      <table name="nodes" numRows="4" remarks="" schema="fribourg" type="TABLE">
+         <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="nodeid" nullable="false" remarks="" size="10" type="int4" typeCode="4">
+            <child column="destinationnodeid" foreignKey="fk_destinationnode" implied="false" onDeleteCascade="true" schema="fribourg" table="arcs"/>
+            <child column="sourcenodeid" foreignKey="fk_sourcenode" implied="false" onDeleteCascade="true" schema="fribourg" table="arcs"/>
+            <child column="nodeid" foreignKey="fk_node" implied="false" onDeleteCascade="true" schema="fribourg" table="collectionpointscenarioversions_nodes_potcp"/>
+            <child column="nodeid" foreignKey="fk_node" implied="false" onDeleteCascade="true" schema="fribourg" table="facilities"/>
+            <child column="nodeid" foreignKey="fk_node" implied="false" onDeleteCascade="true" schema="fribourg" table="garbagescenarioversions_nodes_waste"/>
+            <child column="nodeid" foreignKey="fk_node" implied="false" onDeleteCascade="true" schema="fribourg" table="resultsvehicles_wastedepots"/>
+            <child column="nodeid" foreignKey="fk_node" implied="false" onDeleteCascade="true" schema="fribourg" table="tour_nodes"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="xcoordinate" nullable="false" remarks="" size="10" type="int4" typeCode="4"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="ycoordinate" nullable="false" remarks="" size="10" type="int4" typeCode="4"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="nrinhab" nullable="false" remarks="" size="10" type="int4" typeCode="4"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="vehicledepot" nullable="false" remarks="" size="1" type="bool" typeCode="-7"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="5" name="wastedepot" nullable="false" remarks="" size="1" type="bool" typeCode="-7"/>
+         <primaryKey column="nodeid" sequenceNumberInPK="1"/>
+         <index name="nodes_pkey" unique="true">
+            <column ascending="true" name="nodeid"/>
+         </index>
+      </table>
+      <table name="results" numRows="2" remarks="" schema="fribourg" type="TABLE">
+         <column autoUpdated="false" defaultValue="null" digits="6" id="0" name="timing" nullable="false" remarks="" size="29" type="timestamp" typeCode="93">
+            <child column="timingresult" foreignKey="fk_result" implied="false" onDeleteCascade="true" schema="fribourg" table="facilities"/>
+            <child column="timingresult" foreignKey="fk_result" implied="false" onDeleteCascade="true" schema="fribourg" table="resultsvehicles"/>
+            <child column="timingresult" foreignKey="fk_result" implied="false" onDeleteCascade="true" schema="fribourg" table="tours"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="titlegarbsc" nullable="false" remarks="" size="255" type="varchar" typeCode="12">
+            <parent column="title" foreignKey="fk_garbagescenario" implied="false" onDeleteCascade="true" schema="fribourg" table="garbagescenarioversions"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="2" name="timinggarbsc" nullable="false" remarks="" size="29" type="timestamp" typeCode="93">
+            <parent column="timing" foreignKey="fk_garbagescenario" implied="false" onDeleteCascade="true" schema="fribourg" table="garbagescenarioversions"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="titlecpsc" nullable="false" remarks="" size="255" type="varchar" typeCode="12">
+            <parent column="title" foreignKey="fk_collectionpointscenario" implied="false" onDeleteCascade="true" schema="fribourg" table="collectionpointscenarioversions"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="4" name="timingcpsc" nullable="false" remarks="" size="29" type="timestamp" typeCode="93">
+            <parent column="timing" foreignKey="fk_collectionpointscenario" implied="false" onDeleteCascade="true" schema="fribourg" table="collectionpointscenarioversions"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="5" name="model" nullable="false" remarks="" size="3" type="varchar" typeCode="12"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="6" name="maxwalkingdistance" nullable="false" remarks="" size="10" type="int4" typeCode="4"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="7" name="minwaste" nullable="true" remarks="" size="10" type="int4" typeCode="4"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="8" name="totaltime" nullable="false" remarks="" size="10" type="int4" typeCode="4"/>
+         <primaryKey column="timing" sequenceNumberInPK="1"/>
+         <index name="results_pkey" unique="true">
+            <column ascending="true" name="timing"/>
+         </index>
+      </table>
+      <table name="resultsvehicles" numRows="3" remarks="" schema="fribourg" type="TABLE">
+         <column autoUpdated="false" defaultValue="null" digits="6" id="0" name="timingresult" nullable="false" remarks="" size="29" type="timestamp" typeCode="93">
+            <child column="timingresult" foreignKey="fk_resultvehicle" implied="false" onDeleteCascade="true" schema="fribourg" table="resultsvehicles_wastedepots"/>
+            <parent column="timing" foreignKey="fk_result" implied="false" onDeleteCascade="true" schema="fribourg" table="results"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="titlevehicletype" nullable="false" remarks="" size="255" type="varchar" typeCode="12">
+            <child column="titlevehicletype" foreignKey="fk_resultvehicle" implied="false" onDeleteCascade="true" schema="fribourg" table="resultsvehicles_wastedepots"/>
+            <parent column="title" foreignKey="fk_vehicletype" implied="false" onDeleteCascade="true" schema="fribourg" table="vehicletypeversions"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="2" name="timingvehicletype" nullable="false" remarks="" size="29" type="timestamp" typeCode="93">
+            <child column="timingvehicletype" foreignKey="fk_resultvehicle" implied="false" onDeleteCascade="true" schema="fribourg" table="resultsvehicles_wastedepots"/>
+            <parent column="timing" foreignKey="fk_vehicletype" implied="false" onDeleteCascade="true" schema="fribourg" table="vehicletypeversions"/>
+         </column>
+         <primaryKey column="timingresult" sequenceNumberInPK="1"/>
+         <primaryKey column="titlevehicletype" sequenceNumberInPK="2"/>
+         <primaryKey column="timingvehicletype" sequenceNumberInPK="3"/>
+         <index name="resultsvehicles_pkey" unique="true">
+            <column ascending="true" name="timingresult"/>
+            <column ascending="true" name="titlevehicletype"/>
+            <column ascending="true" name="timingvehicletype"/>
+         </index>
+      </table>
+      <table name="resultsvehicles_wastedepots" numRows="4" remarks="" schema="fribourg" type="TABLE">
+         <column autoUpdated="false" defaultValue="null" digits="6" id="0" name="timingresult" nullable="false" remarks="" size="29" type="timestamp" typeCode="93">
+            <parent column="timingresult" foreignKey="fk_resultvehicle" implied="false" onDeleteCascade="true" schema="fribourg" table="resultsvehicles"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="titlevehicletype" nullable="false" remarks="" size="255" type="varchar" typeCode="12">
+            <parent column="titlevehicletype" foreignKey="fk_resultvehicle" implied="false" onDeleteCascade="true" schema="fribourg" table="resultsvehicles"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="2" name="timingvehicletype" nullable="false" remarks="" size="29" type="timestamp" typeCode="93">
+            <parent column="timingvehicletype" foreignKey="fk_resultvehicle" implied="false" onDeleteCascade="true" schema="fribourg" table="resultsvehicles"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="nodeid" nullable="false" remarks="" size="10" type="int4" typeCode="4">
+            <parent column="nodeid" foreignKey="fk_node" implied="false" onDeleteCascade="true" schema="fribourg" table="nodes"/>
+         </column>
+         <primaryKey column="timingresult" sequenceNumberInPK="1"/>
+         <primaryKey column="titlevehicletype" sequenceNumberInPK="2"/>
+         <primaryKey column="timingvehicletype" sequenceNumberInPK="3"/>
+         <primaryKey column="nodeid" sequenceNumberInPK="4"/>
+         <index name="resultsvehicles_wastedepots_pkey" unique="true">
+            <column ascending="true" name="timingresult"/>
+            <column ascending="true" name="titlevehicletype"/>
+            <column ascending="true" name="timingvehicletype"/>
+            <column ascending="true" name="nodeid"/>
+         </index>
+      </table>
+      <table name="tour_nodes" numRows="9" remarks="" schema="fribourg" type="TABLE">
+         <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="nodeid" nullable="false" remarks="" size="10" type="int4" typeCode="4">
+            <parent column="nodeid" foreignKey="fk_node" implied="false" onDeleteCascade="true" schema="fribourg" table="nodes"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="1" name="tourtiming" nullable="false" remarks="" size="29" type="timestamp" typeCode="93">
+            <parent column="timing" foreignKey="fk_tour" implied="false" onDeleteCascade="true" schema="fribourg" table="tours"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="wastecollected" nullable="false" remarks="" size="10" type="int4" typeCode="4"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="ordering" nullable="false" remarks="" size="10" type="int4" typeCode="4"/>
+         <primaryKey column="nodeid" sequenceNumberInPK="1"/>
+         <primaryKey column="tourtiming" sequenceNumberInPK="2"/>
+         <primaryKey column="ordering" sequenceNumberInPK="3"/>
+         <index name="tour_nodes_pkey" unique="true">
+            <column ascending="true" name="nodeid"/>
+            <column ascending="true" name="tourtiming"/>
+            <column ascending="true" name="ordering"/>
+         </index>
+      </table>
+      <table name="tours" numRows="3" remarks="" schema="fribourg" type="TABLE">
+         <column autoUpdated="false" defaultValue="null" digits="6" id="0" name="timing" nullable="false" remarks="" size="29" type="timestamp" typeCode="93">
+            <child column="tourtiming" foreignKey="fk_tour" implied="false" onDeleteCascade="true" schema="fribourg" table="tour_nodes"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="1" name="timingresult" nullable="false" remarks="" size="29" type="timestamp" typeCode="93">
+            <parent column="timing" foreignKey="fk_result" implied="false" onDeleteCascade="true" schema="fribourg" table="results"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="tourtime" nullable="false" remarks="" size="10" type="int4" typeCode="4"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="tourwaste" nullable="false" remarks="" size="10" type="int4" typeCode="4"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="titlevehicletype" nullable="false" remarks="" size="255" type="varchar" typeCode="12">
+            <parent column="title" foreignKey="fk_vehicletypeversion" implied="false" onDeleteCascade="true" schema="fribourg" table="vehicletypeversions"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="5" name="timingvehicletype" nullable="false" remarks="" size="29" type="timestamp" typeCode="93">
+            <parent column="timing" foreignKey="fk_vehicletypeversion" implied="false" onDeleteCascade="true" schema="fribourg" table="vehicletypeversions"/>
+         </column>
+         <primaryKey column="timing" sequenceNumberInPK="1"/>
+         <index name="tours_pkey" unique="true">
+            <column ascending="true" name="timing"/>
+         </index>
+      </table>
+      <table name="vehicletypes" numRows="2" remarks="" schema="fribourg" type="TABLE">
+         <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="title" nullable="false" remarks="" size="255" type="varchar" typeCode="12">
+            <child column="title" foreignKey="fk_vehicletype" implied="false" onDeleteCascade="true" schema="fribourg" table="vehicletypeversions"/>
+         </column>
+         <primaryKey column="title" sequenceNumberInPK="1"/>
+         <index name="vehicletypes_pkey" unique="true">
+            <column ascending="true" name="title"/>
+         </index>
+      </table>
+      <table name="vehicletypeversions" numRows="4" remarks="" schema="fribourg" type="TABLE">
+         <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="title" nullable="false" remarks="" size="255" type="varchar" typeCode="12">
+            <child column="titlevehicletype" foreignKey="fk_vehicletype" implied="false" onDeleteCascade="true" schema="fribourg" table="resultsvehicles"/>
+            <child column="titlevehicletype" foreignKey="fk_vehicletypeversion" implied="false" onDeleteCascade="true" schema="fribourg" table="tours"/>
+            <child column="title" foreignKey="fk_vehicletype" implied="false" onDeleteCascade="true" schema="fribourg" table="vehicletypeversions_nodes_activatedarcs"/>
+            <parent column="title" foreignKey="fk_vehicletype" implied="false" onDeleteCascade="true" schema="fribourg" table="vehicletypes"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="1" name="timing" nullable="false" remarks="" size="29" type="timestamp" typeCode="93">
+            <child column="timingvehicletype" foreignKey="fk_vehicletype" implied="false" onDeleteCascade="true" schema="fribourg" table="resultsvehicles"/>
+            <child column="timingvehicletype" foreignKey="fk_vehicletypeversion" implied="false" onDeleteCascade="true" schema="fribourg" table="tours"/>
+            <child column="timing" foreignKey="fk_vehicletype" implied="false" onDeleteCascade="true" schema="fribourg" table="vehicletypeversions_nodes_activatedarcs"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="averagespeedtour" nullable="false" remarks="" size="10" type="int4" typeCode="4"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="3" name="averagespeeddepot" nullable="false" remarks="" size="10" type="int4" typeCode="4"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="averagestoptime" nullable="false" remarks="" size="10" type="int4" typeCode="4"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="5" name="vehiclecapacity" nullable="false" remarks="" size="10" type="int4" typeCode="4"/>
+         <primaryKey column="title" sequenceNumberInPK="1"/>
+         <primaryKey column="timing" sequenceNumberInPK="2"/>
+         <index name="vehicletypeversions_pkey" unique="true">
+            <column ascending="true" name="title"/>
+            <column ascending="true" name="timing"/>
+         </index>
+      </table>
+      <table name="vehicletypeversions_nodes_activatedarcs" numRows="16" remarks="" schema="fribourg" type="TABLE">
+         <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="sourcenodeid" nullable="false" remarks="" size="10" type="int4" typeCode="4">
+            <parent column="sourcenodeid" foreignKey="fk_arc" implied="false" onDeleteCascade="true" schema="fribourg" table="arcs"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="destinationnodeid" nullable="false" remarks="" size="10" type="int4" typeCode="4">
+            <parent column="destinationnodeid" foreignKey="fk_arc" implied="false" onDeleteCascade="true" schema="fribourg" table="arcs"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="title" nullable="false" remarks="" size="255" type="varchar" typeCode="12">
+            <parent column="title" foreignKey="fk_vehicletype" implied="false" onDeleteCascade="true" schema="fribourg" table="vehicletypeversions"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="6" id="3" name="timing" nullable="false" remarks="" size="29" type="timestamp" typeCode="93">
+            <parent column="timing" foreignKey="fk_vehicletype" implied="false" onDeleteCascade="true" schema="fribourg" table="vehicletypeversions"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="4" name="activated" nullable="false" remarks="" size="1" type="bool" typeCode="-7"/>
+         <primaryKey column="sourcenodeid" sequenceNumberInPK="1"/>
+         <primaryKey column="destinationnodeid" sequenceNumberInPK="2"/>
+         <primaryKey column="title" sequenceNumberInPK="3"/>
+         <primaryKey column="timing" sequenceNumberInPK="4"/>
+         <index name="vehicletypeversions_nodes_activatedarcs_pkey" unique="true">
+            <column ascending="true" name="sourcenodeid"/>
+            <column ascending="true" name="destinationnodeid"/>
+            <column ascending="true" name="title"/>
+            <column ascending="true" name="timing"/>
+         </index>
+      </table>
+   </tables>
+</database>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<database name="wastecollectiondata" schema="usersprojects" type="PostgreSQL - 12.6 (Ubuntu 12.6-0ubuntu0.20.04.1)">
+   <tables>
+      <table name="projects" numRows="1" remarks="" schema="usersprojects" type="TABLE">
+         <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="projectname" nullable="false" remarks="" size="255" type="varchar" typeCode="12">
+            <child column="projectid" foreignKey="fk_project" implied="false" onDeleteCascade="true" schema="usersprojects" table="userprojects"/>
+         </column>
+         <primaryKey column="projectname" sequenceNumberInPK="1"/>
+         <index name="projects_pkey" unique="true">
+            <column ascending="true" name="projectname"/>
+         </index>
+      </table>
+      <table name="userprojects" numRows="1" remarks="" schema="usersprojects" type="TABLE">
+         <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="userid" nullable="false" remarks="" size="255" type="varchar" typeCode="12">
+            <parent column="email" foreignKey="fk_user" implied="false" onDeleteCascade="true" schema="usersprojects" table="users"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="projectid" nullable="false" remarks="" size="255" type="varchar" typeCode="12">
+            <parent column="projectname" foreignKey="fk_project" implied="false" onDeleteCascade="true" schema="usersprojects" table="projects"/>
+         </column>
+         <primaryKey column="userid" sequenceNumberInPK="1"/>
+         <primaryKey column="projectid" sequenceNumberInPK="2"/>
+         <index name="userprojects_pkey" unique="true">
+            <column ascending="true" name="userid"/>
+            <column ascending="true" name="projectid"/>
+         </index>
+      </table>
+      <table name="users" numRows="3" remarks="" schema="usersprojects" type="TABLE">
+         <column autoUpdated="false" defaultValue="null" digits="0" id="0" name="email" nullable="false" remarks="" size="255" type="varchar" typeCode="12">
+            <child column="userid" foreignKey="fk_user" implied="false" onDeleteCascade="true" schema="usersprojects" table="userprojects"/>
+         </column>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="1" name="admini" nullable="false" remarks="" size="1" type="bool" typeCode="-7"/>
+         <column autoUpdated="false" defaultValue="null" digits="0" id="2" name="passwort" nullable="false" remarks="" size="255" type="varchar" typeCode="12"/>
+         <primaryKey column="email" sequenceNumberInPK="1"/>
+         <index name="users_pkey" unique="true">
+            <column ascending="true" name="email"/>
+         </index>
+      </table>
+   </tables>
+</database>

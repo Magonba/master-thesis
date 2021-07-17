@@ -1,0 +1,13 @@
+What to include in the introduction:
+-Goals of the thesis
+-Relevance of the thesis
+-Structure of the thesis
+
+Is there a paper from Reinhard about the Decision Support Application for Waste Collection Optimization?
+
+Background
+Goal
+Relevance
+Structure
+
+Leave Introduction for the end

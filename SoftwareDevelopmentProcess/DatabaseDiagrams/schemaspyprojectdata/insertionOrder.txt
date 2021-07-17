@@ -1,0 +1,17 @@
+nodes
+collectionpointscenarios
+garbagescenarios
+vehicletypes
+vehicletypeversions
+collectionpointscenarioversions
+garbagescenarioversions
+results
+resultsvehicles
+arcs
+tours
+facilities
+tour_nodes
+collectionpointscenarioversions_nodes_potcp
+garbagescenarioversions_nodes_waste
+resultsvehicles_wastedepots
+vehicletypeversions_nodes_activatedarcs

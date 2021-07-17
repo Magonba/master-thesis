@@ -1,0 +1,145 @@
+4. Software Development Process
+
+In this chapter the application development process is described.
+
+The software development process can be partitioned in four parts which are the requirements engineering, the database development, the server-side application development and the client-side application development. While the requirements engineering lays out a plan for the development of the entire application, the other three components follow a bottom-up approach where the database is the piece of software that is furthest away from the user and the client-side application is the closest to the user. The server-side application is then the connection between the database and the client-side application.
+
+In theory, these four components could be concluded one after the other, but in practise they provided more of a general guideline in the development process, where it was possible to adapt previous steps in later stages (e.g. the requirements could be adapted when the server-side development was in progress). The reason that those steps were not concluded in a purely chronological order is that, on one hand, it is difficult to completely grasp the requirements at the beginning of the project (adaptations of requirements may happen in later stages of the process) and, on the other hand, since the database, the server-side and the client-side applications are connected between each other unexpected changes in one of those components might lead to changes in the other two components.
+
+The server-side and client-side development can additionally be splitted in a coding and a testing part. The coding and the testing of the server-side and client-side application was done in an iterative way where first some part of the application was coded and then tested as needed.
+
+The first subchapter is going to describe the requirements engineering of the application. Concretely, it will look at the use cases that were developed and the prototype that was created at the beginning of the process. The second subchapter is going to look more in depth into the database design. The third subchapter will take a look at the architecture of the server-side application and how it interacts with waste collection optimization algorithms developed by Bürgy et al. 20xx. Lastly, the fourth subchapter explains the functioning of the client-side application. In each of the subchapters the used technologies are going to be shortly presented.
+
+4.1. Requirements Engineering
+
+Requirements engineering processes do (among other things) elicit, analyse, negotiate, specify and validate software requirements and are considered one of the most critical steps in the software development process (Tahir & Ahmad, 2010, p.1). It can have a negative impact on later stages of the software development process if it is poorly executed and is crucial in order to finish software projects successfully since it is its foundation (ur Rehman et al., 2013, p.1). This clearly shows the importance of requirements engineering and why this step should not be skipped.
+
+The chosen technique to specify software requirements was a screen mockup. Screen mockups have been shown to be very useful for understanding the requirements of a project (Ricca et al., 20xx)(Ricca et al., 20xx)(Ricca et al., 20xx). Additionally a use case diagram was created. Use case diagrams, even though vague, help to not lose the fundamental functionalities that the application must have out of sight (Head First Object Oriented Analysis and Design, Book, McLaughlin).
+
+The screen mockup was developed iteratively by meeting the stakeholders of the project regularly. The first meeting notes were taken about how the application could look like. Then for the subsequent meeting a screen mockup was developed and presented to the stakeholders which could then input their improvement propositions. Then before each subsequent meeting the mockup was improved based on the inputs of the stakeholders which again could input their improvement propositions. This process was repeated until the mockup was judged to sufficiently correspond to what the stakeholders imagined.
+
+[insert image representing the process]
+
+The developed screen mockup shows, on one hand, generic application functionalities such as log in and sign up functionalities. On the other hand, it shows application specific functionalities such as a scenario based input specification functionality (e.g. the user can input how much garbage is produced on each node and save this specification) and a solution request functionality which allows the user to request individualized solutions for its specific municipality by choosing its input parameters (which are among other things the scenario based input specifications). Additionally, the administrator should be able to create a new project for a municipality by uploading its map to the application, manage project permissions (i.e. who is allowed to access a certain project) and delete users if needed. The developed use case diagram of the application can be seen on graphic xxx.
+
+[show: use case diagram]
+
+After agreeing on the functionalities, the next step was to specify the general architecuture of the project. First of all, the components that are going to make up the application are: the database, the server, the client-side application and the waste collection optimization algorithm.
+
+The client-side application:
+This is the user interface. It will allow the users to interact with the application. The user can input data and request solutions.
+
+The database:
+The application data will be stored in the database. Those data include user data (email, password, ...) and project data (scenario based input data, solutions data, ...).
+
+The waste collection optimization algorithm:
+This piece of software was already developed by Bürgy et al. 20xx. It still needs to be considered when building the application since the application needs to provide input data to the algorithm and receive output data from it.
+
+The server:
+This is the core of the application. It interacts with the other three components by receiving data from the client-side application, by reading and writing to the database and by inputting and receiving data from the waste collection optimization algorithm.
+
+[show inter-component architecture]
+
+4.2. Server
+
+After considering the screen mockup, the general architecture and the use case diagrams the server application has been structured the following way.
+
+[insert class diagram]
+
+At the core of the server is the data model. The model consists of several classes which have been designed to split the data into logical units. The classes that were developed are:
+
+User.ts
+Represents a user of the application. It is needed to manage logging in to the web application as well as to manage the access to the different projects (Project). Each user has an email, a password (which will be hashed by the Controller before it is stored) and a list of projects (Project) which specifies which projects the user can access. Additionally, it is specified if the user is an administrator or not (administrators have access to all projects).
+
+MapNode.ts
+Represents a node in a map. Each node has an id (which is unique), a x-coordinate, a y-coordinate and a population size. Additionally, it is specified on each node if it can serve as a vehicle depot of a vehicle (VehicleType) in a result (Result) and if it can serve as a waste depot in a collection point scenario (CollectionPointScenarioVersion).
+
+MapArc.ts
+Represents an arc in a map. It connects two nodes (MapNode), a source node and a destination node, and it stores the distance between those two nodes.
+
+Graph.ts
+Represents a map of a municipality. It consists of a list of nodes (MapNode) and a list of arcs (MapArc).
+
+GarbageScenarioVersion.ts
+Represents a concrete garbage scenario. It contains a timing and an estimation of waste on each node of the graph.
+
+GarbageScenario.ts
+Represents a garbage scenario with all its concrete garbage scenarios (GarbageScenarioVersion). It contains the title of the garbage scenario and a list of concrete garbage scenarios (GarbageScenarioVersion). Every time a garbage scenario is modified (i.e. the waste estimation of a node (MapNode) is changed) a new concrete garbage scenario (GarbageScenarioVersion) will be created and added to the list of concrete garbage scenarios.
+
+CollectionPointScenarioVersion.ts
+Represents a concrete collection point scenario. It contains a timing and it specifies on each node if it is a potential collection point or not.
+
+CollectionPointScenario.ts
+Represents a collection point scenario with all its concrete collection point scenarios (CollectionPointScenarioVersion). It contains the title of the collection point scenario and a list of concrete collection point scenarios (CollectionPointScenarioVersion). Every time a collection point scenario is modified (i.e. the specificatio if a node (MapNode) is a potential collection point or not is changed) a new concrete collection point scenario (CollectionPointScenarioVersion) will be created and added to the list of concrete collection point scenarios.
+
+VehicleTypeVersion.ts
+Represents a concrete vehicle type. It contains a timing, an average speed for a tour, an average speed when going to the depot, an average stop time and a vehicle capacity. Additionally, it specifies on each arc if the vehicle type can drive on it or not.
+
+VehicleType.ts
+Represents a vehicle type with all its concrete vehicle types (VehicleTypeVersion). It contains the title of the vehicle type and a list of concrete vehicle types (VehicleTypeVersion). Every time a vehicle type is modified (i.e. the specification if the vehicle type can drive on an arc (MapArc) is changed) a new concrete vehicle type (VehicleTypeVersion) will be created and added to the list of concrete vehicle types.
+
+Tour.ts
+Represents a tour calculated by the waste collection optimization algorithm following a solution request from the user through the web app. It belongs to a result (Result). It contains a timing, the time it takes to accomplish the tour, the estimated total waste collected during the tour, the tour nodes with their order and with their estimated collected waste and the concrete vehicle type (VehicleTypeVersion) that performs the tour.
+
+Facility.ts
+Represents the location of a facility on the map calculated by the waste collection optimization algorithm following a solution request from the user through the web app. It belongs to a result (Result). It contains a node (MapNode) and a waste capacity.
+
+Result.ts
+Represents the requested solution from the user through the web app. The input data from the user and the output data from the waste collection optimization algorithm are stored here. It contains a timing, a concrete garbage scenario (GarbageScenarioVersion), a concrete collection point scenario (CollectionPointScenarioVersion), a list of concrete vehicle types (VehicleTypeVersion) with its possible waste depot nodes (MapNode), the model (i.e. 'k1', 'k2', 'k3'), the maximal walking distance for a citizen to deposit his/her garbage, the minimal waste capacity of a facility (only if model 'k2'), the total cost of the solution, a list of tours (Tour), a list of facilities (Facility) and a boolean value specifying if the solution has been already calculated by the waste collection optimization algorithm.
+
+Project.ts
+Represents an entire project. It contains the project title, a list of users that can access the project (User), a map (Graph), a list of garbage scenarios (GarbageScenario), a list of collection point scenarios (CollectionPointScenario), a list of vehicle types (VehicleType) and a list of results (Result).
+
+Model.ts
+Represents all projects and all users. It contains a list of all users and all projects.
+
+Additionally, some helper classes were developed. These include:
+
+Logger
+Why developping a Logger?
+When any kind of applications run, errors can happen and in that case the programmer will need to debug the application. In order to debug, he needs information about the state of the application at the point of failure and how the application reached that state. Only then is the developer able to fix the application.
+Logging is the writing of diagnostic information to protocols (source: IBM winston tutorial) which can be very helpful when debugging because it provides information on how the program reached the state of failure to the developer (source: IBM winston tutorial).
+There are some libraries in Node.js (e.g. Winston or Log4js) that allow to manage logging in a simple way. Technically, logging could be done by simply using plain JavaScript but logging libraries provide some functionalities that would be time-consuming to code from ground-up (e.g. severity levels of messages).
+
+Winston logging library
+The winston logging library aspires to be a simple but still universal and flexible logging library. It supports multiple log channels and message levels. (source: https://github.com/winstonjs/winston)
+Every winston logger instance can be configured to have several log channels. A log channel (in winston terminology called 'transport') is the destination of the log which can e.g. be the console or a file. For each log channel a message level ('silly', 'debug', 'verbose', 'info', 'warn' or 'error') can be specified. The specified message levels of the log channel and of the log message determine if an information will be logged or not. E.g. if the message level set on a log channel is 'info', a message will be logged if and only if it has the message level 'info' or higher (i.e. 'info', 'warn' or 'error') (source: IBM winston tutorial).
+Extensive information on the winston logging library can be found on its official GitHub site https://github.com/winstonjs/winston.
+
+Implementation
+The Logger class handles the logging of the application and was developed using the Singleton software development pattern, i.e. it assures that there is exactly one logger instance which can be retrieved using its public static getLogger() method. The logger instance contains two winston logger instances. One of these winston logger instances writes database query informations while the other is responsible for all other loggings. The winston logger instance for database query information has one log channel (which is a file log channel) and its message level is set to 'silly' (i.e. all messages will be logged). The winston logger instance for non-database query information has three log channels two of which are file log channels with the message level set to 'silly' and 'info' respectively and one of which is a console log channel with the message level set to 'info'.
+The programmer has to choose between two instance methods of the logger when he wants to log a message which are the public dbLog() and public fileAndConsoleLog() methods. For both of these methods the developer has to pass two parameters to the function, the information he wants to log and its severity (i.e. the message level). The dbLog() method should be used if the log message comes from an interaction between the server and the database. Otherwise the fileAndConsoleLog() method should be used.
+The reason the logger instance contains two winston loggers was to ensure that the log files are splitted by information source. When debugging, this allows to independently analyze the database interactions and the other program errors/informations without each of them polluting each others log files. The reason the winston logger for non-database query informations has three log channels is that it ensures that there are log files with all non-database query logs and log files only with logs of higher severity levels. The log files with the logs with higher message levels allow to more quickly find error logs when debugging (since these log files are not polluted with logs of low message levels). Finally, the winston logger for non-database query informations has a console log channel in order to immediately notify the programmer that the application encountered a problem.
+The winston loggers are updated every day before the first log is performed. Concretely, the filenames of the file log channels will be updated and named after todays date. Therefore the logs from different days will be written in different log-files which further allows the developer to more quickly find relevant logs.
+(Check if needed to cite some things. See e.g. IBM winston logger tutorial)
+
+Database handler
+Why developping a Database handler?
+There are two reasons a Database handler class was created. The first reason is to allow to easily query the database without needing to think about it's usual intricacies (e.g. creating a Pool, providing connection information, etc.) just by using one querying() method. The second reason is to allow the creation and deletion of projects which are complex tasks as it involves the creation, execution and deletion of sql-files.
+
+node-postgres
+Application data will be stored in a PostgreSQL database (see chapter xxx). The interfacing between the server and the database is done using the node-postgres modules which allow to interact with PostgreSQL databases (source: https://node-postgres.com/).
+In order to connect to the PostgreSQL database either a connection Client or Pool (which contains a reusable list of connection clients) has to be created. There are some advantages in using a connection Pool over a Client. One reason is that the use of connection Pools comes with a performance increase. The reason is that a connection Client executes one query at a time when connected to a PostgreSQL database which would lead to a lower performance compared to the connection Pool which manages the execution of several queries among its list of connection Clients. Another reason to use a connection Pool over a Client is that the handshake that is performed when connecting a Client to the PostgreSQL database is very time-consuming (20-30 milliseconds). These costs can be minimized since a connection Pool manages a (reusable) list of connection Clients. (https://node-postgres.com/features/pooling)
+The creation of a connection Pool (or a Client) requires connection information of the PostgreSQL database. This connection information includes the database user, password, host, port and name. This information can be provided in different ways e.g. by providing a connection string in the form 'postgresql://USER:PASSWORD@HOST:PORT/DB_NAME'. (https://node-postgres.com/features/connecting)
+Database queries can then be executed by calling the query() instance method on the Pool and passing the query string as an argument. (https://node-postgres.com/features/pooling) (yes the 'pooling' site (under 'single query') and not the 'queries' site)
+Extensive information on the node-postgres node.js modules can be found on its official Documentation site https://node-postgres.com/.
+
+Implementation
+The DatabaseHandler class handles the interactions with the PostgreSQL database and was developed using the Singleton software development pattern, i.e. it assures that there is exactly one DatabaseHandler instance which can be retrieved using its public static getDatabaseHandler() method. The public static getDatabaseHandler() sets the connection Pool as well as the users and projects schema (including its tables) in the database up, if necessary.
+The DatabaseHandler contains a public async querying() instance method which, after being called with a query string as argument, executes a database query. Additionally, the class contains the public async setupProject() and public async deleteProject() instance methods that, after being called with the project title string as argument, setup or delete a project from the database, respectively. The setup of a project involves the creation of two sql-files, one for setting up and one for deleting the database schema of the project and its tables. The setup sql-file will be executed after its creation (in order to setup the database schema and its tables). The deletion sql-file will be executed when (and if) the project is deleted using the public async deleteProject() instance method. The public async deleteProject() instance method will also delete both sql-files that were created by the public async setupProject() instance method.
+
+If an object is part of another object, a reference is stored to the latter object. E.g. an arc (MapArc) must be part of a map (Graph), therefore the arc (MapArc) stores a reference to that map (Graph).
+
+4.3. Database
+
+
+
+4.4. Client
+
+
+
+
+[Explain process: Screen mockup iteratively developed] OK
+[Describe prototype] OK
+[Show Use Case diagram (the final use case diagram looks like this...)] OK
+[components of the project]
