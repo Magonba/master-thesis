@@ -128,6 +128,27 @@ Implementation
 The DatabaseHandler class handles the interactions with the PostgreSQL database and was developed using the Singleton software development pattern, i.e. it assures that there is exactly one DatabaseHandler instance which can be retrieved using its public static getDatabaseHandler() method. The public static getDatabaseHandler() sets the connection Pool as well as the users and projects schema (including its tables) in the database up, if necessary.
 The DatabaseHandler contains a public async querying() instance method which, after being called with a query string as argument, executes a database query. Additionally, the class contains the public async setupProject() and public async deleteProject() instance methods that, after being called with the project title string as argument, setup or delete a project from the database, respectively. The setup of a project involves the creation of two sql-files, one for setting up and one for deleting the database schema of the project and its tables. The setup sql-file will be executed after its creation (in order to setup the database schema and its tables). The deletion sql-file will be executed when (and if) the project is deleted using the public async deleteProject() instance method. The public async deleteProject() instance method will also delete both sql-files that were created by the public async setupProject() instance method.
 
+Controller
+Why developping a Controller?
+In order to have a properly functioning waste collection application server there are two needs that must be satisfied. Firstly, the server needs an interface in order to allow the client-side application to interact with it. Secondly, when the server receives information from the client-side application (and also the waste collection optimization algorithm) through its interface, it needs to update the waste collection application model based on the information it receives. Those two needs are satisfied by developing a Controller.
+
+Technologies used
+In order for the client-side application to interact with the server a REST web API using the Koa web framework was developed. The data is delivered to the client in JavaScript Object Notation (JSON) format.
+REST API
+An API, which is an acronym for application programming interface, is a set of rules which determine how different programs can communicate with each other (source: https://www.ibm.com/cloud/learn/api). An API allows that an application accesses a resource from another application. The application requesting a resource is called client while the application containing a resource is called server (source: https://www.ibm.com/cloud/learn/rest-apis). Todays most common APIs are web APIs which allow access to resources over the internet (source: https://www.ibm.com/cloud/learn/api).
+An API functions by a client sending a request to the API through its URI (Uniform Resource Identifier). The API then calls the server after receiving the request. The server then returns a response to the API following the request of the client. The API then sends the data it received from the server to the client (source: https://www.ibm.com/cloud/learn/api).
+
+[insert graph explaining functioning of API]
+
+REST (Representational State Transfer) is an architectural style for distributed hypermedia systems.(Fussnote 1)
+
+(Fussnote 1): 
+
+[type of protocol, i.e. REST (not really a protocol though)]
+
+Implementation
+
+
 If an object is part of another object, a reference is stored to the latter object. E.g. an arc (MapArc) must be part of a map (Graph), therefore the arc (MapArc) stores a reference to that map (Graph).
 
 4.3. Database
