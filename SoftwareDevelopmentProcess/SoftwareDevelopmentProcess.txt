@@ -140,9 +140,38 @@ An API functions by a client sending a request to the API through its URI (Unifo
 
 [insert graph explaining functioning of API]
 
-REST (Representational State Transfer) is an architectural style for distributed hypermedia systems.(Fussnote 1)
+REST (Representational State Transfer) which was first proposed by Roy Fielding in his doctoral thesis is an architectural style for distributed hypermedia systems.(Fussnote 1) Roy Fielding derived REST by imposing six architectural constraints from a few network-based architectural styles and thus described it as a hybrid style. The six architectural constraints are:
+Client-Server Separation
+Leads to a separation of concerns. The user interface and the data storage are separated from each other.
+Statelessness
+Enforces that each client request contains all the necessary information to process it. There cannot be any stored context on the server.
+Cache
+Response data must be labeled as cacheable or not. Cache is data that can be reused by the client for future, equivalent requests and can thus reduce the client-server interactions.
+Uniform interface
+Data is exchanged through a standardized interface.
+Layered System
+REST allows architectural components to be structured hierarchically where each component exclusively knows the component that it is interacting with.
+Code-on-demand
+This is the only optional constraint. It allows clients to download executable code and thus extend its functionalities.
+(cite Roy Fieldings properly)
 
-(Fussnote 1): 
+(Fussnote 1): Hypermedia was suggested by Denise Tolhurst to be defined as "...any computer-based system that allows the interactive linking, and hence nonlinear traversal, of information that is presented in multiple forms that include text, still or animated graphics, movie segments, sounds, and music..." (add source! literal quote!!! Denise Tolhurst). Hypertext, contrary to hypermedia, refers only to static information which can include e.g. text, pictures and tables but e.g. not audio or video (source: Denise Tolhurst). The World Wide Web which was originally described as hypertext by Tim Berners-Lee (source: World-wide web: the information universe) is an example of hypermedia since it also presents non-static information such as audio and video.
+
+While Roy Fielding developed REST from a theoretical perspective, his work gives little insight on how to practically implement a concrete REST Web Service. According to Alex Rodriguez nowadays a concretely implemented REST Web Service follows four principles. These are:
+Statelessness
+As already specified by Fielding, each request contains all necessary information (cite Fielding here).
+In order to achieve a stateless service, the client is entirely responsible for storing any session state. When the client makes a request, it needs to include in the HTTP headers and body every piece of data that the server needs in order to respond i.e. the client shall make few assumptions about the server adding any context to the request. (cite Rodriguez here)
+Use HTTP methods
+The HTTP methods POST, GET, PUT and DELETE correspond to the CRUD operations (create, read, update, delete). Each HTTP method should only be used to execute the CRUD operation it is mapped to, i.e. a POST request creates a resource, a GET request reads a resource, a PUT request updates a resource and a DELETE request deletes a resource. (cite Rodriguez here)
+Directory structure-like URIs
+The design of REST Web Service URIs should be easy to understand (or even self-explanatory). This is achievable by defining directory structure-like URIs. E.g. the URI "http://www.myservice.org/discussion/topics/{topic}" exposes discussions about the topic "{topic}". On the other hand, if we wanted to expose the discussions in a certain language we would expose the URI "http://www.myservice.org/discussion/languages/{language}". (cite Rodriguez here)
+Send JSON or XML (or both) requests/responses
+JSON (JavaScript Object Notation) and XML (Extensible Markup Language) formats allow to present data objects in a simple and human-readable form. Resources should be transfered in one of these two data interchange formats. (cite Rodriguez here)
+
+JSON
+JSON is a data interchange format. JSON does not depend on any programming language but uses concepts that are relatable to programmers of most programming languages. It is based on two structures which are unordered sets of key-value pairs (also called objects) and ordered lists of elements. Equivalent structures to unordered sets of key-value pairs exist in most programming languages and are called e.g. dictionaries or hash tables while equivalent structures to ordered lists of elements are called e.g. arrays or lists. Each value of a key-value pair of an object can be an object, an ordered list, a string, a number or one of the the values "true", "false" or "null".
+JSON is an ideal data interchange format since the structures that it is based on exist at least in some form in most programming languages.
+[insert example of JSON]
 
 [type of protocol, i.e. REST (not really a protocol though)]
 
