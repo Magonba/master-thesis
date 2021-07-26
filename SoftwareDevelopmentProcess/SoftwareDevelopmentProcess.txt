@@ -85,7 +85,7 @@ Facility.ts
 Represents the location of a facility on the map calculated by the waste collection optimization algorithm following a solution request from the user through the web app. It belongs to a result (Result). It contains a node (MapNode) and a waste capacity.
 
 Result.ts
-Represents the requested solution from the user through the web app. The input data from the user and the output data from the waste collection optimization algorithm are stored here. It contains a timing, a concrete garbage scenario (GarbageScenarioVersion), a concrete collection point scenario (CollectionPointScenarioVersion), a list of concrete vehicle types (VehicleTypeVersion) with its possible waste depot nodes (MapNode), the model (i.e. 'k1', 'k2', 'k3'), the maximal walking distance for a citizen to deposit his/her garbage, the minimal waste capacity of a facility (only if model 'k2'), the total cost of the solution, a list of tours (Tour), a list of facilities (Facility) and a boolean value specifying if the solution has been already calculated by the waste collection optimization algorithm.
+Represents the requested solution from the user through the web app. The input data from the user and the output data from the waste collection optimization algorithm are stored here. It contains a timing, a concrete garbage scenario (GarbageScenarioVersion), a concrete collection point scenario (CollectionPointScenarioVersion), a list of concrete vehicle types (VehicleTypeVersion) with its possible waste depot nodes (MapNode), the model (i.e. 'k1', 'k2', 'k3'), the maximal walking distance for a citizen to deposit his/her garbage, the minimal waste capacity of a facility (only for model 'k2'), the total cost of the solution, a list of tours (Tour), a list of facilities (Facility) and a boolean value specifying if the solution has been already calculated by the waste collection optimization algorithm.
 
 Project.ts
 Represents an entire project. It contains the project title, a list of users that can access the project (User), a map (Graph), a list of garbage scenarios (GarbageScenario), a list of collection point scenarios (CollectionPointScenario), a list of vehicle types (VehicleType) and a list of results (Result).
@@ -221,10 +221,100 @@ Implementation
 The Controller class handles the interactions with the server and was developed using the Singleton software development pattern, i.e. it assures that there is exactly one Controller instance which can be retrieved using its public static createController() method. The public static createController() method stores a reference to the data model (i.e. all projects and users) in a variable and sets up the Koa object by adding the middlewares to it. Additionally, a file watch is set up which handles the file outputs of the waste collection optimization program.
 The middlewares added to the koa object include the koa-logger, koa-bodyparser, koa2-cors and the koa-routers routes that were set up. A middleware that responds to OPTIONS requests was also added.
 The routing middleware functions that were set up can be splitted in two groups. In the first group we have middleware functions that have generic preparatory purposes while in the second group we have specific handlers for our endpoints. The difference between these two types of functions can be easily understood with an example. When a GET request to the URI '/api/protected/project/fribourg' is made the Controller needs to first authenticate the user, then check if the user is allowed to access the project 'fribourg' and then send the data of the project 'fribourg' back. When a DELETE request to the URI '/api/protected/project/bern' is made the Controller needs to first authenticate the user, then check if the user is allowed to access the project 'bern' and then delete the project 'bern'. We see a pattern here. The first two steps of the GET and the DELETE request are almost the same (only the projectname being different). The first step needs to be executed every time a request is made to a URI starting with '/api/protected' while the second step needs to be executed every time a request is made to a URI starting with '/api/protected/project/{projectname}'. This means that we can set up generic preparatory middleware functions that are executed when a request is made to a URI that starts with those strings. On the other hand, the specific handlers of our endpoints is then the middleware function that handles (in our example) the retrieving of the project 'fribourg' data and the deletion of the project 'bern'.
+
 The specified generic preparatory middleware functions are:
+/api/protected
+Reads the JSON Web Token of the request (which is sent as a cookie) and verifies it in order to authenticate the user.
+/api/protected/project/:projectname
+Most importantly, finds the Project object with the provided projectname in the URI and checks if the user is allowed to access that project.
+/api/protected/project/:projectname/user/:email
+Most importantly, finds the user object with the provided email in the URI and checks if the user, who makes the request, is allowed to add or delete that user to respectively from the project.
+/api/protected/user/:email
+Most importantly, finds the user object with the provided email in the URI and checks if the user, who makes the request, is allowed to access that user.
+
+The following handlers of our endpoints accept in some cases request bodies. The schema of the request bodies is visualized by using the TypeScript type declaration of objects. E.g. the following body has a property 'title' of type string and a property 'count' of type number:
+{ title: string; count: number; }
 
 The specified specific handlers of our endpoints are:
+POST /api/public/register
+Request body: { email: string; admin: boolean; password: string; }
+The new user gets created using the users data from the request body. The password is hashed before creating the user.
+POST /api/public/login
+Request body: { email: string; password: string; }
+The user object is found and the password from the request body is then compared with the stored hashed password. If the request bodys password is correct, a JSON Web Token gets signed and sent to the client as a cookie.
+GET /api/public/logout
+No request body necessary.
+User gets logged out by setting the cookie holding the JSON Web Token to an empty string which expires immediately.
+POST /api/protected/newproject/:projectname
+Request body: { xml: string; }
+Creates a new project with the projectname provided in the URI. The map (graph) of the municipality gets set using the xml data in the request body. This endpoint is only accessible to administrators.
+DELETE /api/protected/project/:projectname
+No request body necessary.
+Deletes the project with the projectname provided in the URI. This endpoint is only accessible to administrators.
+PUT /api/protected/project/:projectname
+Request body: { newProjectname: string; }
+Finds the project with the projectname provided in the URI. Then updates its projectname using the newProjectname value from the request body.
+GET /api/protected/project/:projectname
+No request body necessary.
+Finds the project with the projectname provided in the URI. Then returns its data as a JSON object which includes nodes, arcs, garbage scenarios, collection point scenarios, vehicle types, results and users data.
+GET /api/protected/projects
+No request body necessary.
+Returns data that describes which user(s) can modify which project(s). This endpoint is only accessible to administrators.
+DELETE /api/protected/user/:email
+No request body necessary.
+Deletes the user with the email provided in the URI.
+PUT /api/protected/user/:email
+Request body: { newEmail: string; newAdmin: boolean; newPassword: string; }
+Finds the user object with the email provided in the URI and updates its data to the values provided in the request body. The new password gets hashed before the update.
+GET /api/protected/user/:email
+No request body necessary.
+Finds the user with the email provided in the URI. Then returns its data as a JSON object which includes its email, admin status (true/false), (hashed) password and the projects the user is allowed to access.
+GET /api/protected/users
+No request body necessary.
+Returns data that describes which user(s) can modify which project(s). This endpoint is only accessible to administrators.
+POST /api/protected/project/:projectname/user/:email
+No request body necessary.
+Adds the user with the email provided in the URI to the project with the projectname provided in the URI (i.e. the user gets the rights to access the project).
+DELETE /api/protected/project/:projectname/user/:email
+No request body necessary.
+Deletes the user with the email provided in the URI from the project with the projectname provided in the URI (i.e. the user loses the rights to access the project).
+POST /api/protected/project/:projectname/garbageScenario
+Request body: { title: string; nodesWaste: { nodeid: number; wasteEstimation: number }[] }
+Creates a new garbage scenario with the title provided by the request body and then adds a new garbage scenario version to it using the nodes waste data from the request body.
+DELETE /api/protected/project/:projectname/garbageScenario/:title
+No request body necessary.
+Deletes the garbage scenario with the title in the URI from the project with the projectname in the URI.
+PUT /api/protected/project/:projectname/garbageScenario
+Request body: { title: string; nodesWaste: { nodeid: number; wasteEstimation: number }[]; newTitle: string; }
+Updates the title of the garbage scenario with the new title provided in the request body and adds a new garbage scenario version to it using the nodes waste data from the request body.
+POST /api/protected/project/:projectname/collectionPointScenario
+Request body: { title: string; nodesPotCP: { nodeid: number; potentialCollectionPoint: boolean }[] }
+Creates a new collection point scenario with the title provided by the request body and then adds a new collection point scenario version to it using the nodes potential collection points data from the request body.
+DELETE /api/protected/project/:projectname/collectionPointScenario/:title
+No request body necessary.
+Deletes the collection point scenario with the title in the URI from the project with the projectname in the URI.
+PUT /api/protected/project/:projectname/collectionPointScenario
+Request body: { title: string; nodesPotCP: { nodeid: number; potentialCollectionPoint: boolean }[]; newTitle: string; }
+Updates the title of the collection point scenario with the new title provided in the request body and adds a new collection point scenario version to it using the nodes potential collection points data from the request body.
+POST /api/protected/project/:projectname/vehicleType
+Request body: { title: string; averageSpeedTour: number; averageSpeedDepot: number; averageStopTime: number; vehicleCapacity: number; arcsActivated: { sourceNodeID: number; destinationNodeID: number; activated: boolean }[] }
+Creates a new vehicle type with the title provided by the request body and then adds a new vehicle type version to it using the activated arcs, average tour speed, average depot speed, average stop time and vehicle capacity data from the request body.
+DELETE /api/protected/project/:projectname/vehicleType/:title
+No request body necessary.
+Deletes the vehicle type with the title in the URI from the project with the projectname in the URI.
+PUT /api/protected/project/:projectname/vehicleType
+Request body: { title: string; averageSpeedTour: number; averageSpeedDepot: number; averageStopTime: number; vehicleCapacity: number; arcsActivated: { sourceNodeID: number; destinationNodeID: number; activated: boolean }[]; newTitle: string; }
+Updates the title of the vehicle type with the new title provided in the request body and adds a new vehicle type version to it using the activated arcs, average tour speed, average depot speed, average stop time and vehicle capacity data from the request body.
+POST /api/protected/project/:projectname/result
+Request body: { garbageScenarioTitle: string; garbageScenarioTiming: string; collectionPointScenarioTitle: string; collectionPointScenarioTiming: string; vehTypeVersAndWasteDepotNodes: { vehicleTypeTitle: string; vehicleTypeTiming: string; availableWasteDepotNodes: { nodeid: number }[]; }[]; model: string; maxWalkingDistance: number; minWaste: number; }
+Adds a result to the project with the projectname provided in the URI using the request bodies data. This initiates the calculation of a concrete result by the waste collection optimization algorithm by writing an input XML file to a folder which then is accessed and read by the waste collection optimization program.
+DELETE /api/protected/project/:projectname/result/:resulttiming
+No request body necessary.
+Deletes the result with the result timing provided in the URI from the project with the projectname provided in the URI.
 
+As soon as the waste collection optimization program has calculated a result, it creates an XML output file which is left in a specified folder. The server then gets notified by a file watcher that an XML output file has been created and loads the files data into the program (and database).
+
+[how does a request body need to be specified -> an object with key value pairs]
 
 If an object is part of another object, a reference is stored to the latter object. E.g. an arc (MapArc) must be part of a map (Graph), therefore the arc (MapArc) stores a reference to that map (Graph).
 
