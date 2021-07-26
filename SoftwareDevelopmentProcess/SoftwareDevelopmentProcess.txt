@@ -169,13 +169,61 @@ Send JSON or XML (or both) requests/responses
 JSON (JavaScript Object Notation) and XML (Extensible Markup Language) formats allow to present data objects in a simple and human-readable form. Resources should be transfered in one of these two data interchange formats. (cite Rodriguez here)
 
 JSON
-JSON is a data interchange format. JSON does not depend on any programming language but uses concepts that are relatable to programmers of most programming languages. It is based on two structures which are unordered sets of key-value pairs (also called objects) and ordered lists of elements. Equivalent structures to unordered sets of key-value pairs exist in most programming languages and are called e.g. dictionaries or hash tables while equivalent structures to ordered lists of elements are called e.g. arrays or lists. Each value of a key-value pair of an object can be an object, an ordered list, a string, a number or one of the the values "true", "false" or "null".
-JSON is an ideal data interchange format since the structures that it is based on exist at least in some form in most programming languages.
+JSON is a data interchange format. JSON does not depend on any programming language but uses concepts that are relatable to programmers of most programming languages. It is based on two structures which are unordered sets of key-value pairs (also called objects) and ordered lists of elements. Equivalent structures to unordered sets of key-value pairs exist in most programming languages and are called e.g. dictionaries or hash tables while equivalent structures to ordered lists of elements are called e.g. arrays or lists. Each value of a key-value pair in an object can be an object, an ordered list, a string, a number or one of the the values "true", "false" or "null".
+JSON is an ideal data interchange format since the structures that it is based on exist at least in some form in most programming languages. (cite https://www.json.org/json-en.html)
 [insert example of JSON]
 
-[type of protocol, i.e. REST (not really a protocol though)]
+XML (Extensible Markup Language)
+XML is a data format that allows to represent structured information (https://www.w3.org/standards/xml/core). XML is, as its name says, a markup language i.e. you can mark up content with tags. Tags are recognizable by the opening and closing angle brackets ('<' and '>'). In order to organize data in XML, the data needs to be placed between a beginning and ending tag. Such structures are called elements. A concrete element could be:
+<date>21 January 1995</date>
+Nesting of elements is also possible and each element can additionally contain attributes which are specified inside a tag:
+<date calendar="gregorian">
+    <day>21</day>
+    <month>1</month>
+    <year>1995</year>
+</date>
+Important to note is that a concrete XML-file will have exactly one root element.
+The following piece of code shows the content of a concrete XML-file (including an optional XML declaration on the first line):
+[include XML-file content]
+
+Koa
+Koa is a web framework for nodejs that allows to create web APIs.
+A Koa object contains an array of middleware functions which will be executed upon request. The middleware functions are specified by passing them as parameters to the instance method use() on a koa object. A specified middleware passes control downstream to the next middleware by invoking the async next() function. When there are no more middlewares to execute the control flow will go back upstream. (source: https://koajs.com/)
+[insert easy koa middleware example here]
+
+There are several nodejs modules that can be used with the Koa web framework. These modules include:
+koa-router
+Allows to configure routing which means that we can specify how the API will respond to a request to a certain endpoint (which is a HTTP method and a URI) (source: https://expressjs.com/en/starter/basic-routing.html). Thus a router middleware function will only be executed if the request is targeted at its specified endpoint. We can specify a route on a koa-router by invoking its instance methods use(), get(), post(), del() or patch(). While the use() method will specify a route that can be matched regardless of the requests HTTP method, routes specified with the other methods (i.e. get(), post(), del() and patch()) can only be matched if the respective HTTP method was used for the request. We then have to provide to these methods a URI as parameter as well as a function that specifies how the request is handled. The specified route can only be matched if the requests URI matches with the beginning of the URI we specified on the route. The specified routes on the koa-router are then added as middleware to the koa object by invoking the use() instance method on the koa object and passing to it the routes middleware functions (which are retrieved with the instance method routes() on the koa-router) as parameters.
+[insert good example for koa-router]
+Additionally, the koa-routers allowedMethods() instance method returns a middleware that can handle OPTIONS requests.
+
+koa2-cors
+What is CORS?
+CORS stands for Cross-Origin Resource Sharing. It is a mechanism based on certain HTTP-headers that permits a server to specify which origins (i.e. a combination of scheme, domain and port) other than its own can access its resources from a browser. In its simplest use, CORS is handled by setting two HTTP-headers, one request header (which is the Origin header) and one response header (which is the Access-Control-Allow-Origin header). The Origin header will always, as its name says, show the origin of the request. The Access-Control-Allow-Origin header will show which origins are allowed to access the resources of the server. If the Origin and Access-Control-Allow-Origin do not match the request will fail. There is also the possibility to send so called preflighted requests which allow to determine if the actual request can be sent without encountering a CORS failure. (source: https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS)
+Additionally, CORS can handle credentialed requests (i.e. with HTTP cookies) by setting the Access-Control-Allow-Credentials response header to true. If the Access-Control-Allow-Credentials response header is not set to true the browser will reject the response. (source: https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS)
+The koa2-cors module provides CORS middleware for Koa. It allows to set several CORS headers.
+
+Additional modules used in the development of the Controller are the koa-bodyparser which provides us a middleware that parses the body that was sent through the HTTP request (so it is accessible in the Koa app through ctx.request.body) and the koa-logger which logs information about requests and responses to the Koa app (thus can be useful for debugging the application).
+
+Chokidar
+Chokidar is a file watching library (source: https://www.npmjs.com/package/chokidar). It concretely allows e.g. to specify what a program should do when a file is added to a folder.
+
+bcrypt
+A library to generate and check hashed passwords. (https://www.npmjs.com/package/bcrypt)
+
+JSON Web Token (JWT)
+JWT is an open standard that allows the secure transmission of data between parties. JSON Web Tokens can be digitally signed using a secret key with the HMAC (Hash-based Message Authentication Code) algorithm. JWTs are most commonly used for handling Authorization. When the user logs into an application a JWT can be returned which then has to be sent by the client to the server every time a resource is accessed. The server then needs to authenticate the user by verifying the JWT and check if the user is authorized to access that resource. (source: https://jwt.io/introduction/)
+
+jsonwebtoken
+This nodeJS module implements JSON Web Tokens.
 
 Implementation
+The Controller class handles the interactions with the server and was developed using the Singleton software development pattern, i.e. it assures that there is exactly one Controller instance which can be retrieved using its public static createController() method. The public static createController() method stores a reference to the data model (i.e. all projects and users) in a variable and sets up the Koa object by adding the middlewares to it. Additionally, a file watch is set up which handles the file outputs of the waste collection optimization program.
+The middlewares added to the koa object include the koa-logger, koa-bodyparser, koa2-cors and the koa-routers routes that were set up. A middleware that responds to OPTIONS requests was also added.
+The routing middleware functions that were set up can be splitted in two groups. In the first group we have middleware functions that have generic preparatory purposes while in the second group we have specific handlers for our endpoints. The difference between these two types of functions can be easily understood with an example. When a GET request to the URI '/api/protected/project/fribourg' is made the Controller needs to first authenticate the user, then check if the user is allowed to access the project 'fribourg' and then send the data of the project 'fribourg' back. When a DELETE request to the URI '/api/protected/project/bern' is made the Controller needs to first authenticate the user, then check if the user is allowed to access the project 'bern' and then delete the project 'bern'. We see a pattern here. The first two steps of the GET and the DELETE request are almost the same (only the projectname being different). The first step needs to be executed every time a request is made to a URI starting with '/api/protected' while the second step needs to be executed every time a request is made to a URI starting with '/api/protected/project/{projectname}'. This means that we can set up generic preparatory middleware functions that are executed when a request is made to a URI that starts with those strings. On the other hand, the specific handlers of our endpoints is then the middleware function that handles (in our example) the retrieving of the project 'fribourg' data and the deletion of the project 'bern'.
+The specified generic preparatory middleware functions are:
+
+The specified specific handlers of our endpoints are:
 
 
 If an object is part of another object, a reference is stored to the latter object. E.g. an arc (MapArc) must be part of a map (Graph), therefore the arc (MapArc) stores a reference to that map (Graph).
