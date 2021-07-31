@@ -85,13 +85,16 @@ Facility.ts
 Represents the location of a facility on the map calculated by the waste collection optimization algorithm following a solution request from the user through the web app. It belongs to a result (Result). It contains a node (MapNode) and a waste capacity.
 
 Result.ts
-Represents the requested solution from the user through the web app. The input data from the user and the output data from the waste collection optimization algorithm are stored here. It contains a timing, a concrete garbage scenario (GarbageScenarioVersion), a concrete collection point scenario (CollectionPointScenarioVersion), a list of concrete vehicle types (VehicleTypeVersion) with its possible waste depot nodes (MapNode), the model (i.e. 'k1', 'k2', 'k3'), the maximal walking distance for a citizen to deposit his/her garbage, the minimal waste capacity of a facility (only for model 'k2'), the total cost of the solution, a list of tours (Tour), a list of facilities (Facility) and a boolean value specifying if the solution has been already calculated by the waste collection optimization algorithm.
+Represents the requested solution from the user through the web app. The input data from the user and the output data from the waste collection optimization algorithm are stored here. It contains a timing, a concrete garbage scenario (GarbageScenarioVersion), a concrete collection point scenario (CollectionPointScenarioVersion), a list of concrete vehicle types (VehicleTypeVersion) with its possible waste depot nodes (MapNode), the model (i.e. 'k1', 'k2', 'k3'), the maximal walking distance for a citizen to deposit his/her garbage, the minimal waste capacity of a facility (only for model 'k2'), the total cost of the solution, a list of tours (Tour), a list of facilities (Facility) and a boolean value specifying if the solution has been already calculated by the waste collection optimization algorithm. When a solution gets requested by a user, a result will get created using the public static async createResult method which also writes an input XML-file with the data given in by the user. The input XML-file is left in a folder and the waste collection optimization program then gets executed with the file provided as argument. The waste collection optimization program will leave an output XML-file in another folder as soon as it has calculated the results. The output XML-file will then be read and added to the result using its public setResultData method by the controller.
 
 Project.ts
-Represents an entire project. It contains the project title, a list of users that can access the project (User), a map (Graph), a list of garbage scenarios (GarbageScenario), a list of collection point scenarios (CollectionPointScenario), a list of vehicle types (VehicleType) and a list of results (Result).
+Represents an entire project. It contains the project title, a list of users that can access the project (User), a map (Graph), a list of garbage scenarios (GarbageScenario), a list of collection point scenarios (CollectionPointScenario), a list of vehicle types (VehicleType) and a list of results (Result). When creating a new project two SQL files are written, one for setting up the new project schema in the database (which is immediately executed) and the other for deleting it from the database (in case it will be necessary in the future).
+//corrections are possible for the implementation of the software (and also, obviously, for the written master thesis)
 
 Model.ts
-Represents all projects and all users. It contains a list of all users and all projects.
+The Model class represents all projects and all users of the application and was developed using the Singleton software development pattern, i.e. it assures that there is exactly one model instance which can be retrieved using its public static createModel() method. It contains a list of all users and all projects and, when created, also sets up the projects-users connections (by adding them to the user or project lists inside the projects respectively users instances). It handles the adding and deleting of projects and users from the application.
+
+Each of these classes generally possess a (static) function to create instances of them and write the corresponding data to the database. Except for the Model class these classes also contain a (static) function which, when invoked, reads the database and returns the respective instances of that class. Additionally, these classes contain various getters and setters as well as adders and deleters (i.e. functions that add elements to an array variable or delete them from the array variable). If an object is part of another object, a reference is stored to the latter object. E.g. an arc (MapArc) must be part of a map (Graph), therefore the arc (MapArc) stores a reference to that map (Graph).
 
 Additionally, some helper classes were developed. These include:
 
@@ -314,20 +317,67 @@ Deletes the result with the result timing provided in the URI from the project w
 
 As soon as the waste collection optimization program has calculated a result, it creates an XML output file which is left in a specified folder. The server then gets notified by a file watcher that an XML output file has been created and loads the files data into the program (and database).
 
-[how does a request body need to be specified -> an object with key value pairs]
-
-If an object is part of another object, a reference is stored to the latter object. E.g. an arc (MapArc) must be part of a map (Graph), therefore the arc (MapArc) stores a reference to that map (Graph).
-
 4.3. Database
+Why a Database?
+The data that the user defines needs to be stored in order to be permanently available.
 
+PostgreSQL
+PostgreSQL was chosen as the database to store the applications data. It is an open-source object-relational database management system (source: https://www.postgresql.org/docs/current/intro-whatis.html). SQL (structured query language), which is a programming language that permits the querying and manipulation of data in a relational database (source: https://www.ibm.com/cloud/blog/sql-vs-nosql), is largely supported by PostgreSQL (source: https://www.postgresql.org/docs/current/intro-whatis.html).
+There are a few hierarchical units that we have to be aware of when working with PostgreSQL. The top hierarchical unit of PostgreSQL is the database cluster which is managed by exactly one database server instance and contains (possibly) many databases (source: https://www.postgresql.org/docs/12/creating-cluster.html).
+A database can then contain several schemas which can contain several tables. Schemas allow to separate database objects in groups in order to make them easier to manage (source: https://www.postgresql.org/docs/13/ddl-schemas.html). A table, on the other hand, is a unit where data is stored in a row-based manner where each row has the same named columns (source: https://www.postgresql.org/docs/9.1/tutorial-concepts.html).
 
+Implementation
+In the PostgreSQL database cluster used for this project one database was specified. This database was named 'wastecollectiondata'. The schemas contained in the wastecollectiondata database are:
+-A 'usersprojects' schema: This schema contains the tables users, projects and userprojects. These tables store the users data (email, admin status and password), projects data (projectname) and the user-project connections (i.e. which users can access which projects) respectively.
+[show database schema of usersprojects schema]
+-Projects schemas: Each project has its own schema named after the projectnames in the usersprojects.projects table. It is generally corresponds to the server data model.
+[show database schema of a project schema]
 
 4.4. Client
+Overview
+The prototype that was created during the requirements engineering process was used as a blueprint for the development of the client-side application.
+The frontend was developed as a Single-Page Application. A Single-Page Application is a web application in which every interaction with it happens on a one web page. In a Single-Page Application requests of small pieces of data to the server happen and are then used to modify the DOM. This is very different from a classical (multi-page) web application where after every interaction the browser loads a new web page from the server (source: Ali Mesbah page 10 Analysis and Testing of Ajax-based Single-page Web Applications).
+
+Technologies
+Vue.js
+The client-side application of the project was built using the Vue.js (or simply Vue) framework.
+From a technical perspective, VueJS implements the Model-View-ViewModel (MVVM) design pattern which has three components (View, ViewModel and Model). The Model in Vue.js is represented by plain JavaScript objects while the View is represented by the DOM. The ViewModel sits in between the View and the Model and is responsible for syncing the data between them. The ViewModel sets up the data bindings on the View and gets notified when the Models data changes, achieving reactivity of the View and the Model. (source: https://012.vuejs.org/guide/)
+One of Vues most important concepts is the components system. It allows to define self-contained and reusable elements that can be nested in other elements respectively nest other elements in them (source: https://vuejs.org/v2/guide/#Composing-with-Components). Let's consider an arbitrary example: a travel blog. We have a root component which nests other components, e.g. a toolbar and the content. The content component has descriptive text in it and nests another component (which is a list of travel pictures). Each travel picture of the list is a component which is nested inside the list component. We see that this component system allows to hierarchically organize the frontend application.
+A Vue component can hold several properties such as e.g. props (which are data that are passed from a parent component to a child component), data, methods and a template (source: https://v3.vuejs.org/guide/component-basics.html). The template property of a component has an HTML-based syntax that allows to declaratively render the component data to the DOM (foot note 1) (source: https://vuejs.org/v2/guide/syntax.html). A component can be defined in a file (referred to as Single File Component) which has the .vue extension. The .vue file can specify a template using the template tag and add logic to the component inside the script tag (source: https://vuejs.org/v2/guide/single-file-components.html).
+The following two images provide an example single file component and how it is displayed. We can see how the data is declaratively rendered:
+[definition of simple single file component]
+[screenshot of display of previous code]
+
+During the projects development other libraries and frameworks wer used that are compatible with Vue. These include:
+Vuex
+Vue-router
+Vuetify
+
+Vuex
+Managing a common state across multiple Vue.js components can become tedious in more complex applications. The shared data has to be passed as props down the component hierarchy to the components which use that data. Then every time the data (or props) modification is triggered in a component, that component has to initiate an event chain which fires up the component hierarchy until it reaches the component that holds the shared data which can then finally be modified (source: https://vuex.vuejs.org/).
+Vuex is a state management library for Vue web applications. It provides a centralized store for the Vue.js applications shared data. The advantage of managing shared data in Vue with Vuex instead of the traditional way is that it allows any component to access (i.e. read and modify) data from the centralized store directly through the methods (in Vuex called getters, mutations and actions) which the programmer defines (source: https://vuex.vuejs.org/).
+
+Vue router
 
 
+[Explain how components usually communicate with each other (i.e. through events) in order to make transition to Vuex]
+[Explain Vue-router]
+[Explain Vuetify]
+
+Foot note 1: The DOM (Document Object Model) constitutes the representation of data objects which embody the structure and content of a web document (source: https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model/Introduction).
+
+Implementation
 
 
-[Explain process: Screen mockup iteratively developed] OK
-[Describe prototype] OK
-[Show Use Case diagram (the final use case diagram looks like this...)] OK
+4.5. Testing
+What is Testing? see IBM
+Testing (of software) is the process of verification that a software works the way it is supposed to work. It can prove useful in order to prevent bugs (source: https://www.ibm.com/topics/software-testing).
+There are several types of testing. The types of testing that were used in this project are acceptance and integration testing. While integration testing verifies if several software components work correctly together, acceptance testing checks if the software system as a whole functions the way it is supposed to (source: https://www.ibm.com/topics/software-testing).
+Technologies used
+Jest 
+Jest is a JavaScript testing framework (source: https://jestjs.io/). It allows to easily set up test suites using its API. Functionalities of Jest include setting up (named) tests (source: https://jestjs.io/docs/getting-started), checking values using matchers (source: https://jestjs.io/docs/using-matchers), testing asynchronous code (source: https://jestjs.io/docs/asynchronous), setup and teardown of tests (source: https://jestjs.io/docs/setup-teardown) and creation of test doubles (which is replacement code for some parts of the production code (source: https://developer.ibm.com/languages/node-js/tutorials/learn-nodejs-unit-testing-in-nodejs/)) (source: https://jestjs.io/docs/mock-functions).
+Methodologies
+The server as well as the client were tested during the development of the software. While the server was tested using mostly automated testing (with Jest) the client was tested manually. Test suites were written to test the different classes on the server. In these test suites not all but the 'critical' methods of the classes were tested. The critical methods are those that were judged more likely to fail. A method would be critical if it contains complex code (which means that the likelihood of the programmer implementing the code wrongly is higher) or code that connects with other software components (database, other classes). Simple getters and setters were not considered critical and thus not tested. Test doubles were developed for cases where the inclusion of production code was not practical and necessary.
+While the testing of the server would be considered integration testing (i.e. testing if different components work correctly together) the client-side testing allowed to test the system as a whole (i.e. acceptance testing) (do I need to cite that again?) because the client makes requests to the server which in turn connects to the database (and the waste collection optimization program (maybe delete this because it was not tested)) thus involving the whole system. Testing on the client-side was done manually meaning that different test cases (e.g. logging in to the application, creating a new project, requesting solutions, etc.) were tested by clicking through the frontend application.
+
 [components of the project]
