@@ -348,7 +348,7 @@ The following two images provide an example single file component and how it is 
 [definition of simple single file component]
 [screenshot of display of previous code]
 
-During the projects development other libraries and frameworks wer used that are compatible with Vue. These include:
+During the projects development other libraries and frameworks were used that are compatible with Vue. These include:
 Vuex
 Vue-router
 Vuetify
@@ -357,7 +357,12 @@ Vuex
 Managing a common state across multiple Vue.js components can become tedious in more complex applications. The shared data has to be passed as props down the component hierarchy to the components which use that data. Then every time the data (or props) modification is triggered in a component, that component has to initiate an event chain which fires up the component hierarchy until it reaches the component that holds the shared data which can then finally be modified (source: https://vuex.vuejs.org/).
 Vuex is a state management library for Vue web applications. It provides a centralized store for the Vue.js applications shared data. The advantage of managing shared data in Vue with Vuex instead of the traditional way is that it allows any component to access (i.e. read and modify) data from the centralized store directly through the methods (in Vuex called getters, mutations and actions) which the programmer defines (source: https://vuex.vuejs.org/).
 
-Vue router
+Vue Router
+Vue allows to conditionally render components (or other elements) using its conditional statements inside components templates. Unfortunately, as an application gets more complex, it becomes increasingly tedious to maintain those conditional statements across the entire application. The Vue Router allows to manage in a simple way which content is displayed when and reduce the amount of conditional statements in the application.
+Concretely, Vues official router allows to configure component-based routing (source: https://router.vuejs.org/) i.e. depending on which route is active, a different component is displayed. Other features of the Vue Router include configuration of nested routes and route parameters (source: https://router.vuejs.org/).
+
+Vuetify
+
 
 
 [Explain how components usually communicate with each other (i.e. through events) in order to make transition to Vuex]
