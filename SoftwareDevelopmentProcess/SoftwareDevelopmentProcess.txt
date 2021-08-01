@@ -362,17 +362,25 @@ Vue allows to conditionally render components (or other elements) using its cond
 Concretely, Vues official router allows to configure component-based routing (source: https://router.vuejs.org/) i.e. depending on which route is active, a different component is displayed. Other features of the Vue Router include configuration of nested routes and route parameters (source: https://router.vuejs.org/).
 
 Vuetify
-
-
-
-[Explain how components usually communicate with each other (i.e. through events) in order to make transition to Vuex]
-[Explain Vue-router]
-[Explain Vuetify]
+Vuetify is a User Inteface framework for Vue. The framework is very complete and, among other features, allows to use and style its predefined UI components (source: https://vuetifyjs.com/en/introduction/why-vuetify/).
 
 Foot note 1: The DOM (Document Object Model) constitutes the representation of data objects which embody the structure and content of a web document (source: https://developer.mozilla.org/en-US/docs/Web/API/Document_Object_Model/Introduction).
 
 Implementation
-
+The state (data) of the Vue application as well as the connection to the server is managed in the Vuex store. The components connect to the store in order to retrieve (using Vuex' getters) and modify (using Vuex' actions) data. When an action from the Vuex store is invoked by a component, it sends a HTTP request to the backend server in order to post, delete or update data on the server. Additionally, after the POST, DELETE or PUT request was successful, the invoked action will also perform GET requests in order to update the state of the Vuex store.
+The components responsibility is to retrieve the data they need from the store, process it, display it and, depending on user interactions with the component, trigger state modifications by invoking the Vuex' stores actions. UI components from Vuetify were used in components templates.
+On the highest hierarchical level the Vue application contains two components (defined in the App.vue file). One of these components is defined by the Navbar.vue file which defines two elements, a navigation header and drawer. The second displayed component depends on which route is active since the App.vue file defines a router entry point.
+The routes that were defined on the vue router include:
+-'public' routes, i.e. routes that can be accessed even if the user is not logged in. Those routes include e.g. the home route '/' which displays general information and '/loginorsignup' which allows the user to log in or sign up to the application.
+-'protected' routes which always start with '/protected' and can only be accessed if the user is logged in. Protected routes contain several nested routes which include:
+    -several routes that display projects and users data (e.g. the '/protected/garbagescenarios' route displays the data of garbage scenarios from the currently selected project)
+    -the '/protected/calculateresults' route which displays the CalculateResults component which contains a form that allows to request results from the server.
+    -the '/protected/newproject' route that displays the NewProject component which allows to create a new project (can only be accessed by users with admin rights)
+    -several 'view' routes which display data of specific objects of the project.
+        E.g. the '/protected/view/garbagescenarios/:title/timestamp/:timing/viewmode/:viewmode' route displays data of a specific garbage scenario of the currently selected project. The specific garbage scenario that is displayed is determined by the parameter values of :title and :timing. The parameter value of :viewmode (can take the string values 'edit', 'oldversion', 'createnew' and 'readonly') is used inside the component to determine if certain elements should be disabled or not.
+    -several 'history' routes which displays lists of garbage scenario, collection point scenario or vehicle type versions.
+        E.g. the '/protected/history/garbagescenarios/:title' displays a list of the different garbage scenario versions of the garbage scenario with the title that is passed to the parameter :title.
+Which route is active depends on the latest user interactions with the app. The work flows of the application are explained in the chapter 'Manual' in more detail.
 
 4.5. Testing
 What is Testing? see IBM
