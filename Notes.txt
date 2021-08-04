@@ -20,7 +20,4 @@ table of contents:
  5. Short Manual
  6. Conclusion
 
-Notes 02.07.2021:
-    Plan:
-    -Correct Prototype (done)
-    -Create Diagrams (try to finish, alternatively shorten time to write Technology part)
+Formattierung???
