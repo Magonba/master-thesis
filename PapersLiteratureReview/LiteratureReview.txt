@@ -1,0 +1,12 @@
+Literature Review
+The goal of this chapter is to, firstly, provide definitions of basic core concepts in the thesis at hand. Some of the defined concepts are Decision Support Systems, Waste and Waste Management. Secondly, the development of a waste collection DSS is motivated by literature reviewing the benefits of DSS and waste management. Thirdly, success factors for the users adoption of DSS are analyzed since the goal of the project is to develop a frontend DSS that civil servants are willing to use. Lastly, some developments of waste collection DSS are reviewed and its conclusions are presented.
+
+Keen & Morton 1978 defined Decision Support Systems as computer-based support for decision-making managers who deal with semistructured problems (Keen & Morton 1978, p.97). Keen & Morton 1978 claim that DSS need sufficient structure to be of value and improve the effectiveness of decision processes but are tools that do not automate the decision process. Managers judgements are essential when using DSS (Keen & Morton 1978, p.2).
+
+Pongracz 2002 (p. 129) defined waste as either a thing which in its structure and state in the given time and location has no utility to its owner or an output without owner as well as purpose. Waste Management was defined as the control of waste-related actions in order to protect the environment or conserve resources. It was specified that waste-related actions include the creation, handling and utilization of waste (Pongracz 2002, p.131).
+
+Waste collection management is a subset of waste management. The collection of waste begins with garbage bins holding waste and ends after the transportation of it to a place where the waste is processed, transferred or disposed (Chandrappa & Bhusan Das 2012, p.70).
+
+Properly managing waste collection is an important task since poor management can lead to an overflow of garbage at the storage sites (Chandrappa & Bhusan Das 2012, p.65). Poor waste management (which often includes waste collection management but is not limited to it) has been argued to decrease the quality of ground water (Vasanthi et al, 2008, Nkolika & Onianwa, 2011), communities social cohesion (Owusu 2010), public health (Ziraba et al, 2016) and increase environment pollution (Apostol & Mihai 2012).
+
+Past studies have praised the benefits of using DSS. Ferguson & Jones (1969) concluded, following their experimental study on the usage of a DSS by 300 white collar workers and students, that decision making skills were improved in the majority of cases.
