@@ -1,4 +1,2 @@
--Einleitung schreiben
--Papers zum Literaturteil finden
--Stichpunktartig zusammenfassen um was es in den Papers geht
--Inhaltsverzeichnis verfeinern
+Notes:
+-At the end review if what is written in the thesis was cited correctly (i.e. formally (information on authors, year, etc. are there) and content wise (the source says what the thesis claims it says))
