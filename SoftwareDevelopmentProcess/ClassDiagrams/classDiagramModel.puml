@@ -1,0 +1,354 @@
+@startuml
+class Logger {
+    -loggers: { [loggerTitle: string]: winston.Logger; }
+    -today: string
+    +dbLog(information: string, severity: string): void
+    +fileAndConsoleLog(information: string, severity: string): void
+    -updateLoggers(): void
+    -{static} logger: Logger
+    +{static} getLogger(): Logger
+}
+class DatabaseHandler {
+    -poolUp: boolean
+    -pool: Pool
+    +endPool(): Promise<void>
+    +querying(queryString: string): Promise<Record<string, string | number | boolean | Date | null>[]>
+    +setupProject(projectname: string): Promise<void>
+    +deleteProject(projectname: string): Promise<void>
+    -setupOrDeleteProject(projectname: string, setupOrDelete: string): Promise<void>
+    -execSQLScript(relSQLFilePath: string): Promise<void>
+    -{static} dbHandler: DatabaseHandler
+    +{static} getDatabaseHandler(): Promise<DatabaseHandler>
+}
+class MapArc {
+    -graph: Graph
+    -sourceNode: MapNode
+    -destinationNode: MapNode
+    -distance: number
+    +getGraph(): Graph
+    +getSourceNode(): MapNode
+    +getDestinationNode(): MapNode
+    +getDistance(): number
+    +{static} getArcsObjects(projectname: string, graph: Graph, nodes: MapNode[]): Promise<MapArc[]>
+    +{static} createArc(projectname: string, graph: Graph, sourceNode: MapNode, destinationNode: MapNode, distance: number): Promise<MapArc>
+}
+class User {
+    -email: string
+    -admin: boolean
+    -passwordUnsafeVar: string
+    -projects: Project[]
+    +getMail(): string
+    +setMail(email: string): Promise<void>
+    +getAdmin(): boolean
+    +setAdmin(admin: boolean): Promise<void>
+    +getPassword(): string
+    +setPassword(newPassword: string): Promise<void>
+    +getProjects(): Project[]
+    +addProjectObject(project: Project): void
+    +addProject(project: Project): Promise<void>
+    -addProjectToUserDB(project: Project): Promise<void>
+    +deleteProjectObject(projectToDelete: Project): void
+    +deleteProject(projectToDelete: Project): Promise<void>
+    -deleteProjectFromUserDB(project: Project): Promise<void>
+    +{static} getUserObject(email: string, admin: boolean, passwordUnsafeVar: string): User
+    +{static} createUser(email: string, admin: boolean, passwordUnsafeVar: string): Promise<User>
+}
+class GarbageScenarioVersion {
+    -garbageScenario: GarbageScenario
+    -timing: Date
+    -nodesWaste: [MapNode, number][]
+    +getGarbageScenario(): GarbageScenario
+    +getTiming(): Date
+    +getNodesWaste(): [MapNode, number][]
+    +isNewestVersion(): boolean
+    +{static} createGarbageScenarioVersion(projectname: string, garbageScenario: GarbageScenario, timing: Date, nodesWaste: [MapNode, number][]): Promise<GarbageScenarioVersion>
+    +{static} getGarbageScenarioVersionsObjects(projectname: string, garbageScenario: GarbageScenario, nodes: MapNode[]): Promise<GarbageScenarioVersion[]>
+}
+class VehicleType {
+    -project: Project
+    -title: string
+    -vehicleTypeVersions: VehicleTypeVersion[]
+    +getTitle(): string
+    +setTitle(title: string): Promise<void>
+    +getVehicleTypeVersions(): VehicleTypeVersion[]
+    +addVehicleTypeVersion(timing: Date, averageSpeedTour: number, averageSpeedDepot: number, averageStopTime: number, vehicleCapacity: number, arcsActivated: [MapArc, boolean][]): Promise<VehicleTypeVersion>
+    +deleteVehicleTypeVersion(vehicleTypeVersion: VehicleTypeVersion, results: Result[]): Promise<void>
+    +{static} createVehicleType(project: Project, title: string): Promise<VehicleType>
+    +{static} getVehicleTypesObjects(project: Project, graph: Graph): Promise<VehicleType[]>
+}
+class VehicleTypeVersion {
+    -vehicleType: VehicleType
+    -timing: Date
+    -averageSpeedTour: number
+    -averageSpeedDepot: number
+    -averageStopTime: number
+    -vehicleCapacity: number
+    -arcsActivated: [MapArc, boolean][]
+    +getVehicleType(): VehicleType
+    +getTiming(): Date
+    +getAverageSpeedTour(): number
+    +getAverageSpeedDepot(): number
+    +getAverageStopTime(): number
+    +getVehicleCapacity(): number
+    +getArcsActivated(): [MapArc, boolean][]
+    +isNewestVersion(): boolean
+    +{static} createVehicleTypeVersion(projectname: string, vehicleType: VehicleType, timing: Date, averageSpeedTour: number, averageSpeedDepot: number, averageStopTime: number, vehicleCapacity: number, arcsActivated: [MapArc, boolean][]): Promise<VehicleTypeVersion>
+    +{static} getVehicleTypeVersionsObjects(projectname: string, vehicleType: VehicleType, graph: Graph): Promise<VehicleTypeVersion[]>
+}
+class Tour {
+    -result: Result
+    -timing: Date
+    -tourtime: number
+    -tourwaste: number
+    -tourNodes: [MapNode, number, number][]
+    -vehicleTypeVersion: VehicleTypeVersion
+    +getResult(): Result
+    +getTourTiming(): Date
+    +getTourTime(): number
+    +getTourWaste(): number
+    +getTourNodes(): [MapNode, number, number][]
+    +getVehicleTypeVersion(): VehicleTypeVersion
+    +{static} createTour(projectname: string, result: Result, timing: Date, tourtime: number, tourwaste: number, tourNodes: [MapNode, number, number][], vehicleTypeVersion: VehicleTypeVersion): Promise<Tour>
+    +{static} getToursObjects(projectname: string, result: Result, nodes: MapNode[], vehicleTypes: VehicleType[]): Promise<Tour[]>
+}
+class Facility {
+    -result: Result
+    -node: MapNode
+    -waste: number
+    +getResult(): Result
+    +getNode(): MapNode
+    +getWaste(): number
+    +{static} getFacilitiesObjects(result: Result, nodes: MapNode[]): Promise<Facility[]>
+    +{static} createFacility(node: MapNode, result: Result, waste: number): Promise<Facility>
+}
+class Result {
+    -project: Project
+    -timing: Date
+    -garbageScenarioVersion: GarbageScenarioVersion
+    -collectionPointScenarioVersion: CollectionPointScenarioVersion
+    -vehTypeVersAndWasteDepotNodes: [VehicleTypeVersion, MapNode[]][]
+    -model: string
+    -maxWalkingDistance: number
+    -minWaste: number | null
+    -totalTime: number
+    -tours: Tour[]
+    -facilities: Facility[]
+    -completed: boolean
+    -createXMLInputLeaveInFolderAndExecuteOptimization(): Promise<void>
+    +getProject(): Project
+    +getTiming(): Date
+    +getGarbageScenarioVersion(): GarbageScenarioVersion
+    +getCollectionPointScenarioVersion(): CollectionPointScenarioVersion
+    +getVehTypeVersAndWasteDepotNodes(): [VehicleTypeVersion, MapNode[]][]
+    +getModel(): string
+    +getMaxWalkingDistance(): number
+    +getMinWaste(): number | null
+    +getTours(): Tour[]
+    +setResultData(toursData: Tour[] | [number, number, [MapNode, number, number][], VehicleTypeVersion][], facilitiesData: [MapNode, number][] | Facility[]): Promise<void>
+    -setTours(toursData: Tour[] | [number, number, [MapNode, number, number][], VehicleTypeVersion][]): Promise<void>
+    +getCompleted(): boolean
+    +getTotalTime(): number
+    -setTotalTime(totalTime: number): Promise<void>
+    -setFacilities(facilitiesData: [MapNode, number][] | Facility[]): Promise<void>
+    +getFacilities(): Facility[]
+    +{static} createResult(project: Project, timing: Date, garbageScenarioVersion: GarbageScenarioVersion, collectionPointScenarioVersion: CollectionPointScenarioVersion, vehTypeVersAndWasteDepotNodes: [VehicleTypeVersion, MapNode[]][], model: string, maxWalkingDistance: number, minWaste: number | null): Promise<Result>
+    +{static} getResultsObjects(project: Project, garbageScenarios: GarbageScenario[], collectionPointScenarios: CollectionPointScenario[], vehicleTypes: VehicleType[], nodes: MapNode[]): Promise<Result[]>
+}
+class GarbageScenario {
+    -project: Project
+    -title: string
+    -garbageScenarioVersions: GarbageScenarioVersion[]
+    +getTitle(): string
+    +setTitle(title: string): Promise<void>
+    +getGarbageScenarioVersions(): GarbageScenarioVersion[]
+    +addGarbageScenarioVersion(timing: Date, nodesWaste: [MapNode, number][]): Promise<GarbageScenarioVersion>
+    +deleteGarbageScenarioVersion(garbageScenarioVersion: GarbageScenarioVersion, results: Result[]): Promise<void>
+    +{static} createGarbageScenario(project: Project, title: string): Promise<GarbageScenario>
+    +{static} getGarbageScenariosObjects(project: Project, nodes: MapNode[]): Promise<GarbageScenario[]>
+}
+class Project {
+    -projectname: string
+    -users: User[]
+    -graph: Graph
+    -garbageScenarios: GarbageScenario[]
+    -collectionPointScenarios: CollectionPointScenario[]
+    -vehicleTypes: VehicleType[]
+    -results: Result[]
+    -modifiedBy: User | undefined
+    +getProjectName(): string
+    +getUsers(): User[]
+    +getGraph(): Graph
+    +getGarbageScenarios(): GarbageScenario[]
+    +addGarbageScenario(title: string): Promise<GarbageScenario>
+    +deleteGarbageScenario(garbageScenario: GarbageScenario): Promise<void>
+    +getCollectionPointScenarios(): CollectionPointScenario[]
+    +addCollectionPointScenario(title: string): Promise<CollectionPointScenario>
+    +deleteCollectionPointScenario(collectionPointScenario: CollectionPointScenario): Promise<void>
+    +getVehicleTypes(): VehicleType[]
+    +addVehicleType(title: string): Promise<VehicleType>
+    +deleteVehicleType(vehicleType: VehicleType): Promise<void>
+    +getResults(): Result[]
+    +addResult(timing: Date, garbageScenarioVersion: GarbageScenarioVersion, collectionPointScenarioVersion: CollectionPointScenarioVersion, vehTypeVersAndWasteDepotNodes: [VehicleTypeVersion, MapNode[]][], model: string, maxWalkingDistance: number, minWaste: number | null): Promise<Result>
+    +deleteResult(result: Result): Promise<void>
+    +setProjectName(projectname: string): Promise<void>
+    +setModifiedBy(userOrUndefined: User | undefined): void
+    +addUserObject(user: User): void
+    +addUser(user: User): Promise<void>
+    -addUserToProjectDB(user: User): Promise<void>
+    +deleteUserObject(userToDelete: User): void
+    +deleteUser(userToDelete: User): Promise<void>
+    -deleteUserFromProjectDB(user: User): Promise<void>
+    +{static} getProjectObject(projectname: string): Promise<Project>
+    +{static} createProject(projectname: string): Promise<Project>
+    -{static} createProjectSQLFiles(setupSQLTemplateRelPath: string, deleteSQLTemplateRelPath: string, projectname: string): Promise<void>
+}
+class Graph {
+    -project: Project | undefined
+    -nodes: MapNode[]
+    -arcs: MapArc[]
+    +getProject(): Project | undefined
+    +setProject(project: Project): void
+    +getNodes(): MapNode[]
+    +getArcs(): MapArc[]
+    +{static} getGraphObject(project: Project): Promise<Graph>
+    +{static} createGraph(emptyGraph: Graph, nodes: MapNode[], arcs: MapArc[]): Graph
+    +{static} createEmptyGraph(project: Project | undefined): Graph
+}
+class MapNode {
+    -graph: Graph
+    -id: number
+    -xCoordinate: number
+    -yCoordinate: number
+    -nrInhab: number
+    -vehicleDepot: boolean
+    -wasteDepot: boolean
+    +getGraph(): Graph
+    +getNodeID(): number
+    +getXCoordinate(): number
+    +getYCoordinate(): number
+    +getNrInhab(): number
+    +getVehicleDepot(): boolean
+    +getWasteDepot(): boolean
+    +{static} createNode(projectname: string, graph: Graph, id: number, xCoordinate: number, yCoordinate: number, nrInhab: number, vehicleDepot: boolean, wasteDepot: boolean): Promise<MapNode>
+    +{static} getNodesObjects(projectname: string, graph: Graph): Promise<MapNode[]>
+}
+class CollectionPointScenarioVersion {
+    -collectionPointScenario: CollectionPointScenario
+    -timing: Date
+    -nodesPotCP: [MapNode, boolean][]
+    +getCollectionPointScenario(): CollectionPointScenario
+    +getTiming(): Date
+    +getNodesPotCP(): [MapNode, boolean][]
+    +isNewestVersion(): boolean
+    +{static} createCollectionPointScenarioVersion(projectname: string, collectionPointScenario: CollectionPointScenario, timing: Date, nodesPotCP: [MapNode, boolean][]): Promise<CollectionPointScenarioVersion>
+    +{static} getCollectionPointScenarioVersionsObjects(projectname: string, collectionPointScenario: CollectionPointScenario, nodes: MapNode[]): Promise<CollectionPointScenarioVersion[]>
+}
+class CollectionPointScenario {
+    -project: Project
+    -title: string
+    -collectionPointScenarioVersions: CollectionPointScenarioVersion[]
+    +getTitle(): string
+    +setTitle(title: string): Promise<void>
+    +getCollectionPointScenarioVersions(): CollectionPointScenarioVersion[]
+    +addCollectionPointScenarioVersion(timing: Date, nodesPotCP: [MapNode, boolean][]): Promise<CollectionPointScenarioVersion>
+    +deleteCollectionPointScenarioVersion(collectionPointScenarioVersion: CollectionPointScenarioVersion, results: Result[]): Promise<void>
+    +getProject(): Project
+    +{static} createCollectionPointScenario(project: Project, title: string): Promise<CollectionPointScenario>
+    +{static} getCollectionPointScenariosObjects(project: Project, nodes: MapNode[]): Promise<CollectionPointScenario[]>
+}
+class Model {
+    -{static} model: Model
+    -users: User[]
+    -projects: Project[]
+    +{static} createModel(): Promise<Model>
+    -createUsers(): Promise<void>
+    -createProjects(): Promise<void>
+    -createUserProjectConnections(): Promise<void>
+    +getUsers(): User[]
+    +getProjects(): Project[]
+    +addUser(email: string, admin: boolean, passwordUnsafeVar: string): Promise<void>
+    +addProject(projectname: string): Promise<void>
+    +deleteUser(email: string): Promise<void>
+    +deleteProject(projectname: string): Promise<void>
+}
+class Controller {
+    -{static} controller: Controller | undefined
+    -model: Model
+    -koaApp: Koa
+    -router: Router
+    +{static} createController(): Promise<Controller>
+    -setupXMLOutputFileWatch(): Promise<void>
+    -setupBeforeEach(): Promise<void>
+    -setupEndpoints(): Promise<void>
+    -registerUser(ctx: Context): Promise<void>
+    -loginUser(ctx: Context): Promise<void>
+    -logoutUser(ctx: Context): Promise<void>
+    -postProject(ctx: Context): Promise<void>
+    -deleteProject(ctx: Context): Promise<void>
+    -patchProject(ctx: Context): Promise<void>
+    -getProject(ctx: Context): Promise<void>
+    -getProjects(ctx: Context): Promise<void>
+    -deleteUser(ctx: Context): Promise<void>
+    -patchUser(ctx: Context): Promise<void>
+    -getUser(ctx: Context): Promise<void>
+    -getUsers(ctx: Context): Promise<void>
+    -addUserToProject(ctx: Context): Promise<void>
+    -deleteUserFromProject(ctx: Context): Promise<void>
+    -postGarbageScenario(ctx: Context): Promise<void>
+    -deleteGarbageScenario(ctx: Context): Promise<void>
+    -patchGarbageScenario(ctx: Context): Promise<void>
+    -postCollectionPointScenario(ctx: Context): Promise<void>
+    -deleteCollectionPointScenario(ctx: Context): Promise<void>
+    -patchCollectionPointScenario(ctx: Context): Promise<void>
+    -postVehicleType(ctx: Context): Promise<void>
+    -deleteVehicleType(ctx: Context): Promise<void>
+    -patchVehicleType(ctx: Context): Promise<void>
+    -postResult(ctx: Context): Promise<void>
+    -deleteResult(ctx: Context): Promise<void>
+    -postResultData(path: string): Promise<void>
+    -setGraphWithXML(xml: string, project: Project): Promise<void>
+    +getKoaApp(): Koa
+    -checkNecessaryFields(requestBody: any, necessaryFields: string[]): void
+    -convertFieldsToLowerCase(requestBody: any, fields: string[]): void
+    -findUser(email: string): Promise<User>
+    -findProject(projectname: string): Promise<Project>
+    -findGarbageScenario(project: Project, garbageScenarioTitle: string): GarbageScenario
+    -findGarbageScenarioVersion(project: Project, garbageScenarioTitle: string, garbageScenarioTiming: string): GarbageScenarioVersion
+    -findCollectionPointScenario(project: Project, collectionPointScenarioTitle: string): CollectionPointScenario
+    -findCollectionPointScenarioVersion(project: Project, collectionPointScenarioTitle: string, collectionPointScenarioTiming: string): CollectionPointScenarioVersion
+    -findVehicleType(project: Project, vehicleTypeTitle: string): VehicleType
+    -findVehicleTypeVersion(project: Project, vehicleTypeTitle: string, vehicleTypeTiming: string): VehicleTypeVersion
+    -findResult(project: Project, resulttiming: string): Result
+    -findNode(project: Project, nodeID: number): MapNode
+    -constructNodesWaste(project: Project, nodesWasteJSON: { nodeid: number; wasteEstimation: number }[]): [MapNode, number][]
+    -constructNodesPotCP(project: Project, nodesPotCPJSON: { nodeid: number; potentialCollectionPoint: boolean }[]): [MapNode, boolean][]
+    -constructArcsActivated(project: Project, arcsActivatedJSON: { sourceNodeID: number; destinationNodeID: number; activated: boolean }[]): [MapArc, boolean][]
+}
+Model "1" *-- "0..*" Project : contains
+Model "1" *-- "0..*" User : contains
+Controller "1" *-- "1" Model : contains
+User "1" *-- "0..*" Project : canAccess
+Project "1" *-- "0..*" User : canBeAccessed
+Project "1" *-- "1" Graph : contains
+Project "1" *-- "0..*" GarbageScenario : contains
+Project "1" *-- "0..*" CollectionPointScenario : contains
+Project "1" *-- "0..*" VehicleType : contains
+Project "1" *-- "0..*" Result : contains
+Graph "1" *-- "0..*" MapNode : contains
+Graph "1" *-- "0..*" MapArc : contains
+MapArc "0..*" o-- "2" MapNode : contains
+GarbageScenario "1" *-- "0..*" GarbageScenarioVersion : contains
+GarbageScenarioVersion "0..*" o-- "0..*" MapNode : makesGarbageEstimationOn
+CollectionPointScenario "1" *-- "many" CollectionPointScenarioVersion : contains
+CollectionPointScenarioVersion "0..*" o-- "0..*" MapNode : marksCollectionPointOn
+VehicleType "1" *-- "many" VehicleTypeVersion : contains
+VehicleTypeVersion "0..*" o-- "0..*" MapArc : activates
+GarbageScenarioVersion "1" *-- "0..*" Result : belongsTo
+CollectionPointScenarioVersion "1" *-- "0..*" Result : belongsTo
+VehicleTypeVersion "0..*" *-- "0..*" Result : belongsTo
+Result "1" *-- "0..*" Tour : contains
+Tour "0..*" o-- "1..*" MapNode : contains
+VehicleTypeVersion "1" *-- "0..*" Tour : belongsTo
+Result "1" *-- "0..*" Facility : contains
+MapNode "1" *-- "0..1" Facility : belongsTo
+@enduml
