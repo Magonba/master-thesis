@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wasteCollection vehicleDepot="1 2" wasteDepot="1 4">
+    <nodes>
+        <node id="1" x="123" y="23" nrInhab="100"/>
+        <node id="2" x="34" y="54" nrInhab="200"/>
+        <node id="3" x="29" y="12" nrInhab="350"/>
+        <node id="4" x="765" y="19" nrInhab="50"/>
+    </nodes>
+    <arcs>
+        <arc source="1" dest="2" length="67"/>
+        <arc source="2" dest="3" length="40"/>
+        <arc source="3" dest="4" length="32"/>
+        <arc source="4" dest="1" length="21"/>
+    </arcs>
+</wasteCollection>

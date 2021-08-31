@@ -1,2 +1,5 @@
 Notes:
 -At the end review if what is written in the thesis was cited correctly (i.e. formally (information on authors, year, etc. are there) and content wise (the source says what the thesis claims it says))
+-give good koa and koa-router example in technologies subchapter
+-JWT is hanging in the subchapter server
+-koa stuff is waaaaay to complicated

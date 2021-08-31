@@ -1,0 +1,77 @@
+Frontend:
+-Users und Projects Ansicht als nicht-Admin und Admin (Fenster bevor löschen, wer kann was löschen, etc.)
+-Calculate Results (Model wechseln)
+
+Vuetify doc:
+https://vuetifyjs.com
+
+In order to start the Postgresql server type:
+-sudo service postgresql start (required after every restart of machine) (in order to stop: sudo service postgresql stop)
+-sudo -u postgres psql
+
+Setup some test projects with SQLQueryToDB (can serve at least as an example):
+./backend/Database/SQLQueryToDB.bash wastecollectiondata wastecollectiondata wastecollectiondata localhost 5432 ./backend/Testing/setupSomeProjects.sql
+
+In order to use postgresql terminal type:
+-list schemas: \dn
+-list users: \du
+-list databases: \l
+-enter database: \c database_name
+
+In order to create a schemaspy diagram type:
+-java -jar schemaspy-6.1.0.jar -t pgsql -db wastecollectiondata -host localhost:5432 -u wastecollectiondata -p wastecollectiondata -o ./schemaspy -dp postgresql-42.2.18.jar -s public -noads
+
+Push things on GitHub
+git add .
+git commit -m "my message"
+git push origin master
+
+Use test-debug:
+    From https://github.com/facebook/jest/issues/9473:
+        For anyone still struggling with this, I managed to narrow down my issue by using a combination of suggestions above. Here's what I did:
+            1. Ran npx jest --runInBand --detectOpenHandles src/tests to validate that something was indeed hanging
+            2. Ran npx jest --runInBand --detectOpenHandles src/tests/someDir on several dirs to figure out which one was the culprit (if it doesn't hang and exits cleanly, move on to another dir)
+            3. Ran npx jest --runInBand --detectOpenHandles src/tests/someDir/someFile to figure out exactly which file was causing the problem
+            4. Commented out tests within the file to figure out exactly which test(s) were causing the problem
+        For anyone using NEXT.js, this line was the problem for me: const nextApp = next({ dev: process.env.NODE_ENV !== 'production' });. I'm ripping it out tomorrow and migrating to serving an app directly from Express 😬
+        Hope this helps someone else out there!
+
+Communication with Backend Algorithm:
+    -XML-files are put into a folder (called input and output)
+
+ESLint, Prettier, Typescript Configuration info:
+    https://www.robertcooper.me/using-eslint-and-prettier-in-a-typescript-project
+    (possible extensions: automatic fixing when saving, no 'bad' commits)
+
+EACCES error, err -13, follow instructions (not everything precisely, just as good as possible, which fixed the problem):
+-https://docs.microsoft.com/en-us/windows/nodejs/setup-on-wsl2
+-https://docs.microsoft.com/en-us/windows/wsl/install-win10
+-Running the following commands in PowerShell as Administrator:
+    dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart
+    dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
+    wsl --set-default-version 2
+    and then restart
+    might be enough
+
+What was done?
+-Linux user "wastecollectiondata" with password "wastecollectiondata" was created
+-PostgreSQL user "wastecollectiondata" with password "wastecollectiondata" was created
+-PostgreSQL database "wastecollectiondata" was created
+-bash files (setupDB.bash, deleteDB.bash) were updated and work as expected as well as setupProjectTemplate.sql and deleteProjectTemplate.sql
+-accessPSQL.js works as expected
+-api.js works as expected
+-Database was created with "../Database/setupDB.bash"
+-For Database diagram see "../Database/schemaspy/diagrams/summary/relationships.real.large.png" (NOT UP TO DATE)
+-Project is on GitHub
+-Created conversionXmlJson.js
+-.env file
+-DBOperations.js File
+-Model and Controller base is done
+
+What to do next?
+-Add Database/DBOperations.js methods to Classes (and maybe other files too)
+-Recreate schemaspy
+-Develop the whole process of a scenario (e.g. garbage estimation scenario), i.e. get data from database to web app, input data to web app, send data back to backend and then read/write to database
+    -Write a Story
+    -Organize files (also for future stories)
+    -Develop Story

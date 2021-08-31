@@ -1,0 +1,9 @@
+XML besprechen:
+    XML input:
+        BinTypeVersions erstellen für K2 (abwarten)
+        VehicleTypeVersion für K1 K3 K4 (für K2 leer lassen)
+    XML Output
+        Informationen aus Output File für Praktiker werden berechnet (und dargestellt im Frontend)
+
+6.April:
+Treffen mit Reinhard und Vera und nach dem Treffen Vera backend erklären

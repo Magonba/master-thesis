@@ -1,0 +1,11 @@
+-Technologies
+    -NodeJS
+    -Typescript
+    -VueJS
+    -Jest (Including mocks)
+    -PostgreSQL
+-Process
+    -Prototype
+    -Use Case Diagrams
+    -Class Diagrams
+    -etc.

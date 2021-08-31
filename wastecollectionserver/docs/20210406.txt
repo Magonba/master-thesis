@@ -1,0 +1,8 @@
+-wasteDep Node pro Fahrzeug (VehicleTypeVersion Node wasteDepot[])
+-wasteDep und vehicleDepot kann undefined sein
+-parameter namen anpassen, so wie von Vera gewünscht
+-K3 Output: wo waste=0 -> intermediate facility
+
+Plan für nächstes Mal:
+-XML
+-classes anpassen

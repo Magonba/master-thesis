@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--ObjVal: 3798.286, ObjBound: 3798.286, MipGap: 0.0, RunTime: 404.486, NodeCount: 28962.0, RootRelaxTime: 0.09--><!--nbNodes: 117.0, maxWalk [m]: 100.0, nbCollPoints: 9.0, nbSplits: 0.0, totalWaste [t]: 0.629, totalTime [h]: 2.208, totalDistance [km]: 48.73, totalConsumption [l]: 19.874, totalEnergy [kWh wtw]: 255.77837999999997, totalCo2 [co2eq kg]: 59.82074, collTime [h]: 0.168, collDistance [km]: 0.636, collConsumption [l]: 0.636, collEnergy [kWh wtw]: 8.185319999999999, collCo2 [co2eq kg]: 1.9143599999999998, -->
+<binNodes>
+    <node id="1">
+    <node id="5">
+</binNodes>

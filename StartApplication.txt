@@ -1,0 +1,19 @@
+1. Open the Ubuntu application (you can search for the application next to the start icon in windows). Other terminal apps are probably also possible to use, but I am not familiar with them.
+2. Type 'sudo service postgresql restart' in order to start (or restart, it does not matter) the database.
+    -Type the password: 'Waste2021!'
+3. Type 'cd /home/wastecol/c/Users/WasteCol/Desktop/wasteCollectionProject/WasteCollectionApp' in the terminal.
+4. Type 'npm start' in order to start the server.
+5. Type 'cd /home/wastecol/c/Users/WasteCol/Desktop/wasteCollectionProject/wastecollectionfrontend' in the terminal.
+6. Type 'npm run serve' in order to start the client.
+7. You can now access the web app via the url 'http://localhost:8080/'. The recommended browser is Firefox.
+
+I left some test entries in the database in order to allow you to try out the app.
+You can log in with the following users:
+-email: 'a.b@c.de', password: 'secure' (this user is the only admin)
+-email: 'e.d@c.ba', password: 'supersecure'
+-email: 'f.g@h.ij', password: 'hypersecure'
+
+Two projects ('fribourg' and 'bern') with data are available.
+User 'e.d@c.ba' has access to project 'fribourg', while 'f.g@h.ij' has access to project 'bern'. User 'a.b@c.de', being an admin, has access to all projects.
+
+If you have any questions, contact me.

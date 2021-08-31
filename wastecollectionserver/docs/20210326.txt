@@ -1,0 +1,3 @@
+-Referenz zu VehicleType in VehicleTypeVersion
+-Treffen mit Vera, Vorschlag zu XML erarbeiten
+-XML umsetzen

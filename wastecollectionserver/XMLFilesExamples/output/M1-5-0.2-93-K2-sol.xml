@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--ObjVal: 177.0, ObjBound: 177.0, MipGap: 0.0, RunTime: 0.424, NodeCount: 1.0, RootRelaxTime: 0.0--><!--nbNodes: 97.0, maxWalkInput [m]: 5.0, maxWalk [m]: 437.0, medianWalk [m]: 34.0, minWorkInput [kg]: 15.0, minWork [kg]: 19.0, nbCollPoints: 10.0, nbProdNodes: 33.0, nbOutliers: 23.0, totalWaste [t]: 0.727, -->
+<facilities number="10">
+  <facility id="3" waste="78" x="88" y="402"/>
+  <facility id="23" waste="117" x="95" y="184"/>
+  <facility id="9" waste="123" x="156" y="244"/>
+  <facility id="27" waste="67" x="136" y="282"/>
+  <facility id="28" waste="37" x="48" y="334"/>
+  <facility id="13" waste="103" x="96" y="261"/>
+  <facility id="31" waste="32" x="175" y="258"/>
+  <facility id="32" waste="82" x="218" y="393"/>
+  <facility id="33" waste="19" x="162" y="337"/>
+  <facility id="34" waste="69" x="71" y="372"/>
+</facilities>

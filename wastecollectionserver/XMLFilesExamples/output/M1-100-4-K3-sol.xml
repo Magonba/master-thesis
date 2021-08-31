@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--ObjVal: 130.31, ObjBound: 113.334, MipGap: 0.13, RunTime: 55.202, NodeCount: 172.0, RootRelaxTime: 0.0--><!--nbNodes: 97.0, maxWalk [m]: 100.0, nbCollPoints: 10.0, nbSplits: 0.0, facilities: [23, 3, 2, 40], --><roundtrips facilities="[23, 3, 2, 40]" time="2568">
+  <tours time="609">
+    <tour time="339" waste="89">
+      <node id="6" waste="0" x="160" y="144"/>
+      <node id="1" waste="0" x="293" y="0"/>
+      <node id="35" waste="9" x="293" y="50"/>
+      <node id="94" waste="7" x="322" y="27"/>
+      <node id="65" waste="13" x="363" y="56"/>
+      <node id="42" waste="60" x="119" y="393"/>
+      <node id="26" waste="0" x="185" y="383"/>
+    </tour>
+    <tour time="80" waste="118">
+      <node id="26" waste="0" x="185" y="383"/>
+      <node id="91" waste="118" x="146" y="311"/>
+      <node id="26" waste="0" x="185" y="383"/>
+    </tour>
+    <tour time="190" waste="130">
+      <node id="26" waste="0" x="185" y="383"/>
+      <node id="34" waste="124" x="71" y="372"/>
+      <node id="15" waste="6" x="191" y="125"/>
+      <node id="6" waste="0" x="160" y="144"/>
+    </tour>
+  </tours>
+  <tours time="1959">
+    <tour time="1959" waste="390">
+      <node id="2" waste="0" x="455" y="375"/>
+      <node id="1" waste="0" x="293" y="0"/>
+      <node id="7" waste="210" x="113" y="172"/>
+      <node id="12" waste="103" x="62" y="203"/>
+      <node id="24" waste="77" x="265" y="411"/>
+      <node id="2" waste="0" x="455" y="375"/>
+    </tour>
+  </tours>
+</roundtrips>

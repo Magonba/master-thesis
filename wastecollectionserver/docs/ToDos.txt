@@ -1,0 +1,17 @@
+-start Frontend (maybe even parallel to backend)
+-handle password (hash it) and authentication
+-Backend Testing (was postponed after a while, should not be forgotten)
+-In DatabaseHandler and Project class is (probably) the same method for creating sql files of the project
+-Use https!!!
+-Move bcrypt to Model
+-availableWasteDepotNodes should be moved from VehicleTypeVersion to Result
+
+Frontend Configuration:
+    -Babel
+    -Typescript (answer TS question with no (since it is easier to use (but has disadvantages)))
+    -Router (use history mode -> yes)
+    -Vuex
+    -Linter (with Prettier) (Lint on save)
+    -configs in dedicated config files
+
+    Also: Configure dotenv

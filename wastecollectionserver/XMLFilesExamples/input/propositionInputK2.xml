@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wasteCollection model="K2" maxWalk="200" projectTitle="fribourg" resultTiming="2013-06-29 4:29:15" minWaste="150">
+    <nodes>
+        <node id="1" potCollPoint="1" waste="120" x="46" y="78"/>
+        <node id="2" potCollPoint="0" waste="0" x="73" y="8"/>
+        <node id="3" potCollPoint="1" waste="127" x="6" y="23"/>
+        <node id="4" potCollPoint="0" waste="0" x="49" y="14"/>
+        <node id="5" potCollPoint="1" waste="10" x="30" y="90"/>
+        <node id="6" potCollPoint="1" waste="60" x="35" y="86"/>
+    </nodes>
+    <arcs>
+        <arc sourcenodeid="1" destnodeid="2" length="68"/>
+        <arc sourcenodeid="2" destnodeid="3" length="78"/>
+        <arc sourcenodeid="3" destnodeid="4" length="67"/>
+        <arc sourcenodeid="4" destnodeid="5" length="8"/>
+        <arc sourcenodeid="5" destnodeid="6" length="6"/>
+        <arc sourcenodeid="6" destnodeid="1" length="678"/>
+        <arc sourcenodeid="1" destnodeid="3" length="438"/>
+        <arc sourcenodeid="1" destnodeid="4" length="982"/>
+    </arcs>
+</wasteCollection>

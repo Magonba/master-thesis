@@ -1,0 +1,7 @@
+Ziele für nächste Woche:
+-Endpoints programmiert
+-XML 'Übersetzung'
+-GitHub adden Vera und Reinhard
+
+Github
+github r.buergy@gmail.com

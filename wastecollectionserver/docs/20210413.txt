@@ -1,0 +1,4 @@
+-bei vehicletypeversions 2 average speed (einsammeln, zum Depot fahren)
+-statt totaltime -> totalcost (da K2 kein totaltime hat...)
+-VehicleTypeVersion:
+    -wasteDepotsNodes[] // welche wasteDepots kann das Fahrzeug anfahren
